@@ -52,6 +52,7 @@ export const sidebarNavItems: SidebarGroup[] = [
     items: [
       { title: 'Dashboard', href: '#', icon: Icons.Home, tooltip: 'Main command center' },
       { title: 'Analytics', href: '#', icon: Icons.BarChart, tooltip: 'Performance metrics' },
+      { title: 'Bonus Calculator', href: '#', icon: Icons.Calculator, tooltip: 'Wager analysis tool', badge: 'NEW' },
     ],
   },
   {

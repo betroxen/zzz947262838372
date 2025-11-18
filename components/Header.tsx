@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from 'react';
 import { Button } from './Button';
 import { Icons } from './icons';
@@ -130,6 +131,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenLogin, onOpenRegister, isL
                             </button>
                             <button onClick={() => { appContext?.setCurrentPage('Settings'); setIsProfileDropdownOpen(false); }} className="flex w-full items-center gap-3 px-3 py-2 text-xs text-[#8d8c9e] hover:bg-[#1A1A1A] hover:text-white transition-colors font-orbitron uppercase rounded-md" role="menuitem">
                                 <Icons.Settings className="h-4 w-4" aria-hidden="true" /> Command Console
+                            </button>
+                            <button onClick={() => { onOpenReview && onOpenReview(); setIsProfileDropdownOpen(false); }} className="flex w-full md:hidden items-center gap-3 px-3 py-2 text-xs text-[#8d8c9e] hover:bg-[#1A1A1A] hover:text-white transition-colors font-orbitron uppercase rounded-md" role="menuitem">
+                                <Icons.Edit className="h-4 w-4" aria-hidden="true" /> Write Review
                             </button>
                         </div>
                         <div className="border-t border-[#333333] p-1">

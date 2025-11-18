@@ -34,8 +34,10 @@ import CopyrightNoticePage from './pages/CopyrightNoticePage';
 import FAQPage from './pages/FAQPage';
 import ProtocolDeepDivePage from './pages/ProtocolDeepDivePage';
 import GuidePage from './pages/GuidePage';
+import { BonusCalculatorPage } from './pages/BonusCalculatorPage';
 import { LoginModal } from './components/LoginModal';
 import { RegisterModal } from './components/RegisterModal';
+import { ReviewModal } from './components/ReviewModal';
 import { Toaster } from './components/Toaster';
 
 function App() {
@@ -67,6 +69,7 @@ function App() {
       case 'Casino Directory': return <CasinoDirectoryPage />;
       case 'Bonus Offers': return <BonusOffersPage />;
       case 'Live RTP Tracker': return <LiveRTPTrackerPage />;
+      case 'Bonus Calculator': return <BonusCalculatorPage />;
       case 'Review Methodology': return <ReviewMethodologyPage />;
       case 'Provably Fair': return <ProvablyFairPage />;
       case 'Protocol Deep Dive': return <ProtocolDeepDivePage />;
@@ -106,6 +109,7 @@ function App() {
     <div className="bg-foundation text-text-primary font-rajdhani min-h-screen">
       <LoginModal />
       <RegisterModal />
+      <ReviewModal />
       <Toaster />
       <Header
         isLoggedIn={isLoggedIn}

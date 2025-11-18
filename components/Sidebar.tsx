@@ -118,13 +118,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed, i
                     </div>
                 </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-6">
                 <div className="flex justify-between text-[10px] font-jetbrains-mono text-[#666] uppercase">
                     <span>XP TO NEXT LEVEL</span>
                     <span className="text-white">4,250 / 5,000</span>
                 </div>
                 <ProgressBar progress={85} className="h-1 bg-[#1A1A1A]" />
             </div>
+
+             <Button 
+                onClick={() => { appContext?.openReviewModal(); setIsMobileOpen(false); }} 
+                className="w-full flex items-center justify-center gap-2 font-orbitron uppercase tracking-wider text-xs bg-neon-surge text-black hover:bg-white shadow-neon-glow-sm"
+            >
+                <Icons.Edit className="h-4 w-4" /> WRITE VPR REPORT
+            </Button>
         </div>
     );
 
