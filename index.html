@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -203,6 +204,19 @@
           background-size: 20px 20px; 
         }
         .text-shadow-neon { text-shadow: 0 0 5px #00FFC0, 0 0 10px #00FFC0; }
+        
+        /* Policy Page Toggle Animation */
+        .policy-content-wrapper {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows 0.5s ease-in-out;
+        }
+        .policy-content-wrapper.expanded {
+          grid-template-rows: 1fr;
+        }
+        .policy-content {
+          overflow: hidden;
+        }
     </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   <script type="importmap">

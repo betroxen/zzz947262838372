@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import { Icons } from './icons';
 import { AppContext, AppContextType } from '../context/AppContext';
@@ -33,7 +34,7 @@ export const Footer: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-y-10 gap-x-8 border-t border-b border-gray-800/50 py-10 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-y-10 gap-x-6 border-t border-b border-gray-800/50 py-10 mb-10">
                     <div className="col-span-1">
                         <h3 className="text-sm font-bold text-neon-surge uppercase tracking-wider mb-4 border-l-2 border-neon-surge pl-2 neon-text-shadow">
                             Intel Core
@@ -61,7 +62,22 @@ export const Footer: React.FC = () => {
                         </ul>
                     </div>
 
-                    <div className="col-span-1 sm:col-span-2 md:col-span-1">
+                    <div className="col-span-1">
+                         <h3 className="text-sm font-bold text-neon-surge uppercase tracking-wider mb-4 border-l-2 border-neon-surge pl-2 neon-text-shadow">
+                            Tactical Guides
+                        </h3>
+                         <ul className="space-y-3">
+                            <FooterLink page="Tactical Guides">Getting Started</FooterLink>
+                            <FooterLink page="Tactical Guides">Mastering ZAP Score</FooterLink>
+                            <FooterLink page="Tactical Guides">Using Edge Finder</FooterLink>
+                            <FooterLink page="Tactical Guides">Responsible Gaming</FooterLink>
+                            <FooterLink page="Tactical Guides">Smart Contracts</FooterLink>
+                            <FooterLink page="Tactical Guides">Privacy & Data</FooterLink>
+                            <FooterLink page="Tactical Guides">Dispute Resolution</FooterLink>
+                        </ul>
+                    </div>
+
+                    <div className="col-span-1">
                         <h3 className="text-sm font-bold text-neon-surge uppercase tracking-wider mb-4 border-l-2 border-neon-surge pl-2 neon-text-shadow">
                             Legal Framework
                         </h3>
@@ -76,7 +92,7 @@ export const Footer: React.FC = () => {
                         </ul>
                     </div>
 
-                    <div className="col-span-1 sm:col-span-2 md:col-span-2 flex flex-col justify-start">
+                    <div className="col-span-1 flex flex-col justify-start">
                          <h3 className="text-sm font-bold text-neon-surge uppercase tracking-wider mb-4 border-l-2 border-neon-surge pl-2 neon-text-shadow">
                             Operational Status
                         </h3>

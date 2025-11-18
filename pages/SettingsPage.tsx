@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Icons } from '../components/icons';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 
-const ConsoleModule = ({ title, icon: Icon, children, isWIP = false }: { title: string, icon: React.FC<any>, children: React.ReactNode, isWIP?: boolean }) => (
+const ConsoleModule = ({ title, icon: Icon, children, isWIP = false }: { title: string, icon: React.FC<any>, children?: React.ReactNode, isWIP?: boolean }) => (
     <div className={`rounded-xl p-6 border border-foundation-light shadow-lg ${isWIP ? 'bg-foundation-light/50' : 'bg-foundation-light'}`}>
         <div className="flex items-center justify-between mb-4 pb-3 border-b border-foundation-lighter">
             <h3 className="flex items-center gap-3 text-xl font-orbitron font-bold text-white uppercase tracking-wider">

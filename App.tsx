@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useContext } from 'react';
@@ -32,6 +33,7 @@ import AffiliatePage from './pages/AffiliatePage';
 import CopyrightNoticePage from './pages/CopyrightNoticePage';
 import FAQPage from './pages/FAQPage';
 import ProtocolDeepDivePage from './pages/ProtocolDeepDivePage';
+import GuidePage from './pages/GuidePage';
 import { LoginModal } from './components/LoginModal';
 import { RegisterModal } from './components/RegisterModal';
 import { Toaster } from './components/Toaster';
@@ -68,6 +70,7 @@ function App() {
       case 'Review Methodology': return <ReviewMethodologyPage />;
       case 'Provably Fair': return <ProvablyFairPage />;
       case 'Protocol Deep Dive': return <ProtocolDeepDivePage />;
+      case 'Tactical Guides': return <GuidePage />;
       case 'Support': return <SupportPage />;
       case 'FAQ': return <FAQPage />;
       case 'Certified Platforms': return <CertifiedPlatformsPage />;

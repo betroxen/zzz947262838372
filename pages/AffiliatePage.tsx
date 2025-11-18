@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Icons } from '../components/icons';
 import { Button } from '../components/Button';
 
-const InfoCard = ({ icon: Icon, title, children }: { icon: React.FC<any>, title: string, children: React.ReactNode }) => (
+const InfoCard = ({ icon: Icon, title, children }: { icon: React.FC<any>, title: string, children?: React.ReactNode }) => (
     <div className="bg-foundation-light p-6 border border-[#333] rounded-lg card-lift">
         <div className="flex items-center gap-4 mb-4">
             <div className="bg-neon-surge/10 p-2 rounded-md">
