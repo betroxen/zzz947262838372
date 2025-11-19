@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed, i
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.title)}
                 className={`group relative flex items-center gap-3 transition-all duration-300 ease-out overflow-hidden rounded-r-lg
-                ${isCollapsed 
+                ${isCollapsed && !isMobile
                     ? 'justify-center w-10 h-10 p-0 mx-auto rounded-lg' 
                     : 'px-4 py-3 w-full'
                 }
@@ -76,7 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed, i
                     aria-hidden="true" 
                 />
                 
-                {!isCollapsed && (
+                {(!isCollapsed || isMobile) && (
                     <>
                         <span className={`text-sm tracking-wide transition-all duration-300 ${isActive ? 'font-bold text-shadow-neon transform translate-x-1' : 'font-medium'}`}>
                             {item.title}
@@ -91,7 +91,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed, i
             </a>
         );
 
-        if (isCollapsed && item.tooltip) {
+        if (isCollapsed && !isMobile && item.tooltip) {
             return <SimpleTooltip key={item.title} text={item.tooltip}>{content}</SimpleTooltip>;
         }
 
@@ -151,17 +151,34 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed, i
                  {appContext?.isLoggedIn && <MobilePilotSummary />}
              </div>
 
-             <div className="flex-1 overflow-y-auto custom-scrollbar py-6 px-4 space-y-6">
-                {sidebarNavItems.map((group) => (
-                    <div key={group.id}>
-                        <h3 className="font-orbitron text-xs uppercase tracking-[0.2em] text-neon-surge mb-4 ml-2 flex items-center gap-2 border-b border-[#333] pb-2">
-                             <group.icon className="h-3 w-3" /> {group.label}
-                        </h3>
-                        <div className="flex flex-col gap-1 pl-2 border-l border-[#222]">
-                            {group.items.map((item) => renderSidebarLink(item, true))}
+             <div className="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-2">
+                {sidebarNavItems.map((group) => {
+                    const isOpen = openGroups.includes(group.id);
+                    return (
+                        <div key={group.id} className="border-b border-[#222] last:border-0 pb-2">
+                             <button 
+                                onClick={() => toggleGroup(group.id)}
+                                className="w-full flex items-center justify-between py-3 px-2 group text-left focus:outline-none"
+                            >
+                                 <h3 className={`font-orbitron text-xs uppercase tracking-[0.2em] flex items-center gap-2 transition-colors ${isOpen ? 'text-neon-surge' : 'text-text-tertiary group-hover:text-white'}`}>
+                                     <group.icon className={`h-4 w-4 ${isOpen ? 'text-neon-surge' : 'text-[#444] group-hover:text-white'}`} /> 
+                                     {group.label}
+                                </h3>
+                                <Icons.ChevronDown className={`h-4 w-4 text-[#444] transition-transform duration-300 ${isOpen ? 'rotate-180 text-neon-surge' : 'group-hover:text-white'}`} />
+                            </button>
+                            
+                             <div 
+                                className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                            >
+                                 <div className="overflow-hidden">
+                                    <div className="flex flex-col gap-1 pl-4 border-l border-[#222] ml-2 mb-2">
+                                        {group.items.map((item) => renderSidebarLink(item, true))}
+                                    </div>
+                                 </div>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
              </div>
 
              <div className="shrink-0 p-4 border-t border-[#333] bg-[#0A0A0F] pb-[calc(1rem+env(safe-area-inset-bottom))]">
