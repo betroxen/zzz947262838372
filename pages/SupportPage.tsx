@@ -1,3 +1,4 @@
+
 import React, { useState, useContext } from 'react';
 import { AppContext, AppContextType } from '../context/AppContext';
 import { ToastContext, ToastContextType } from '../context/ToastContext';
@@ -10,9 +11,9 @@ import { Toggle } from '../components/Toggle';
 const SupportPage: React.FC = () => {
     const appContext = useContext(AppContext as React.Context<AppContextType | undefined>);
     const toastContext = useContext(ToastContext as React.Context<ToastContextType | undefined>);
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [formData, setFormData] = React.useState({
+    const [formData, setFormData] = useState({
         handle: 'DegenGambler',
         email: 'user@zap.gg',
         userId: 'UID-459901',
@@ -81,7 +82,8 @@ const SupportPage: React.FC = () => {
     ];
 
   return (
-    <div className="container mx-auto max-w-6xl animate-fadeIn">
+    <div className="container mx-auto max-w-6xl animate-fadeIn pb-20">
+        {/* Header Section */}
         <div className="mb-12">
             <div className="flex items-center gap-3 mb-4">
                 <Icons.Activity className="h-10 w-10 text-neon-surge" />
@@ -98,6 +100,8 @@ const SupportPage: React.FC = () => {
                     EFFECTIVE DATE: NOVEMBER 09, 2025
                 </p>
             </div>
+            
+            {/* Diagnostic Dashboard */}
             <Card className="p-6 md:p-8 bg-foundation-light/50 border-neon-surge/30 relative overflow-hidden shadow-[0_0_50px_rgba(0,255,192,0.1)]">
                  <div className="relative z-10">
                     <h2 className="font-orbitron text-xl font-bold text-white mb-4 uppercase">LOCK IN THE LINK: YOUR COMMAND CENTER FOR RESOLUTION</h2>
@@ -123,6 +127,7 @@ const SupportPage: React.FC = () => {
             </Card>
         </div>
 
+        {/* Section 1: Intel Circuit */}
         <section className="mb-16">
             <h2 className="font-orbitron text-2xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#333] pb-4">
                 <span className="text-neon-surge">01 //</span> INTEL CIRCUIT & PROTOCOL ACCESS
@@ -163,6 +168,7 @@ const SupportPage: React.FC = () => {
             </div>
         </section>
 
+        {/* Section 2: Ticket System */}
         <section id="ticket-system" className="mb-16">
              <h2 className="font-orbitron text-2xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#333] pb-4">
                 <span className="text-neon-surge">02 //</span> DIRECT COMMUNICATION: LINE ACTIVATION
@@ -185,6 +191,7 @@ const SupportPage: React.FC = () => {
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-10">
+                        {/* User Intel */}
                         <div>
                             <h3 className="text-white font-orbitron font-bold uppercase text-sm mb-6 flex items-center gap-2">
                                 <Icons.Users className="h-4 w-4 text-text-tertiary" /> SENDER'S INTEL (The Source)
@@ -205,6 +212,7 @@ const SupportPage: React.FC = () => {
                             </div>
                         </div>
 
+                         {/* The Signal */}
                          <div>
                             <h3 className="text-white font-orbitron font-bold uppercase text-sm mb-6 flex items-center gap-2">
                                 <Icons.Activity className="h-4 w-4 text-text-tertiary" /> THE SIGNAL (Core Issue)
@@ -231,7 +239,7 @@ const SupportPage: React.FC = () => {
                                     >
                                         <option value="STANDARD">STANDARD (48-72h)</option>
                                         <option value="ELEVATED">ELEVATED (24h)</option>
-                                        <option value="CRITICAL" className="text-warning-high font-bold">CRITICAL (&lt;4h - EVIDENCE MANDATORY)</option>
+                                        <option value="CRITICAL" className="text-warning-high font-bold">CRITICAL (&lt; 4 HOURS (EVIDENCE REQ.))</option>
                                     </Input>
                                 </div>
                                 <div>
@@ -245,6 +253,7 @@ const SupportPage: React.FC = () => {
                             </div>
                         </div>
 
+                        {/* Message & Evidence */}
                         <div>
                             <h3 className="text-white font-orbitron font-bold uppercase text-sm mb-6 flex items-center gap-2">
                                 <Icons.Database className="h-4 w-4 text-text-tertiary" /> THE RAW DATA CONTRACT (Verification Payload)
@@ -277,6 +286,7 @@ const SupportPage: React.FC = () => {
                             </div>
                         </div>
 
+                         {/* Attestation */}
                          <div className="bg-foundation/50 p-6 rounded-xl border border-neon-surge/30 shadow-inner">
                             <h3 className="text-neon-surge font-orbitron font-bold uppercase text-sm mb-4 flex items-center gap-2">
                                 <Icons.Lock className="h-4 w-4" /> DATA ATTESTATION (MANDATORY CHECKPOINT)
@@ -298,6 +308,7 @@ const SupportPage: React.FC = () => {
                             </div>
                         </div>
 
+                        {/* Submit */}
                         <div className="pt-4">
                             <Button 
                                 type="submit" 
@@ -329,6 +340,7 @@ const SupportPage: React.FC = () => {
             </Card>
         </section>
 
+        {/* Section 3: FAQ Firewall */}
         <section className="mb-16">
             <h2 className="font-orbitron text-2xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#333] pb-4">
                 <span className="text-neon-surge">03 //</span> FAQ FIREWALL: PREEMPTIVE STRIKES
