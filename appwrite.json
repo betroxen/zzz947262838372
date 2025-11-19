@@ -1,0 +1,13 @@
+{
+  "projectId": "zapway",
+  "projectName": "Zapway Tactical Data Architect",
+  "collections": [],
+  "functions": [],
+  "hosting": [
+    {
+      "serviceId": "default",
+      "name": "zapway-tda-frontend",
+      "rootDirectory": "build"
+    }
+  ]
+}
