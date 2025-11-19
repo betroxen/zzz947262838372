@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, memo } from 'react';
 import { 
     Search, 
     ShieldCheck, 
@@ -521,24 +521,19 @@ const CASINOS: Casino[] = [
 
 // --- COMPONENTS ---
 
-const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; index: number }> = ({ casino, onSelect, index }) => {
+// OPTIMIZATION: Memoized Card to prevent re-renders during filtering/searching
+const CasinoCard = memo(({ casino, onSelect, index }: { casino: Casino; onSelect: (c: Casino) => void; index: number }) => {
     const isCrown = casino.specialRanking === 'ETERNAL CROWN';
     
     return (
         <div 
             onClick={() => onSelect(casino)}
-            className="group relative rounded-2xl overflow-hidden cursor-pointer flex flex-col h-full bg-[#0c0c0e]/80 backdrop-blur-sm border border-white/5 hover:border-[#00FFC0]/40 transition-all duration-500 hover:shadow-[0_0_50px_-10px_rgba(0,255,192,0.1)] active:scale-[0.98] animate-fade-up"
-            style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'backwards' }}
+            className="group relative rounded-2xl overflow-hidden cursor-pointer flex flex-col h-full bg-black border border-[#1A1A1A] hover:border-[#00FFC0]/40 transition-all duration-200 active:scale-[0.98] transform-gpu will-change-transform animate-fade-up"
+            style={{ animationDelay: `${Math.min(index * 0.05, 0.5)}s`, animationFillMode: 'backwards' }}
         >
-            {/* Matte Background & Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#161618] to-[#08080a] opacity-100 z-0"></div>
-            
-            {/* Cyber Scan Effect (Hover) */}
-            <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(0,255,192,0.03)_50%,transparent_100%)] bg-[length:100%_200%] translate-y-[-100%] group-hover:animate-scan-line opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"></div>
-            
-            {/* Crown Glow Effect */}
+            {/* Crown Glow Effect - Simplified for Performance */}
             {isCrown && (
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00FFC0] blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+                <div className="absolute -top-16 -right-16 w-32 h-32 bg-[#00FFC0] blur-[60px] opacity-10 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none"></div>
             )}
 
             {/* Content */}
@@ -547,11 +542,17 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
                 {/* Header: Logo & Rating */}
                 <div className="flex justify-between items-start mb-6">
                     <div className="relative">
-                        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#18181b] p-1.5 overflow-hidden border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-300 group-hover:border-[#00FFC0]/30`}>
-                            <img src={casino.logo} alt={casino.name} className="w-full h-full object-cover rounded-xl" />
+                        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#18181b] p-1.5 overflow-hidden border border-white/5 shadow-xl group-hover:scale-105 transition-transform duration-300 group-hover:border-[#00FFC0]/30`}>
+                            <img 
+                                src={casino.logo} 
+                                alt={casino.name} 
+                                className="w-full h-full object-cover rounded-xl" 
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </div>
                         {isCrown && (
-                            <div className="absolute -top-3 -left-3 bg-[#00FFC0] text-black text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter shadow-[0_0_15px_#00FFC0]">
+                            <div className="absolute -top-3 -left-3 bg-[#00FFC0] text-black text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter shadow-sm">
                                 Crown
                             </div>
                         )}
@@ -560,13 +561,13 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
                     <div className="text-right">
                          <div className="flex flex-col items-end">
                             <div className="flex items-center gap-1.5">
-                                <span className={`text-3xl md:text-4xl font-black tracking-tighter font-orbitron ${casino.rating >= 4.5 ? 'text-[#00FFC0] drop-shadow-[0_0_15px_rgba(0,255,192,0.4)]' : 'text-white'}`}>
+                                <span className={`text-3xl md:text-4xl font-black tracking-tighter font-orbitron ${casino.rating >= 4.5 ? 'text-[#00FFC0]' : 'text-white'}`}>
                                     {casino.rating.toFixed(1)}
                                 </span>
                             </div>
                             <div className="flex items-center gap-1 mt-1">
                                 {Array.from({ length: 5 }).map((_, i) => (
-                                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < Math.floor(casino.rating) ? 'bg-[#00FFC0] shadow-[0_0_5px_#00FFC0]' : 'bg-[#333]'}`}></div>
+                                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < Math.floor(casino.rating) ? 'bg-[#00FFC0]' : 'bg-[#333]'}`}></div>
                                 ))}
                             </div>
                         </div>
@@ -580,12 +581,12 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
                             {casino.name}
                         </h3>
                         {casino.status === 'VERIFIED' && (
-                            <ShieldCheck className="w-5 h-5 text-[#00FFC0] drop-shadow-[0_0_8px_rgba(0,255,192,0.5)]" />
+                            <ShieldCheck className="w-5 h-5 text-[#00FFC0]" />
                         )}
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {casino.tags.slice(0, 2).map(tag => (
-                            <span key={tag} className="text-[10px] font-bold text-zinc-400 bg-white/5 border border-white/5 px-2.5 py-1 rounded-md uppercase tracking-wider backdrop-blur-sm">
+                            <span key={tag} className="text-[10px] font-bold text-zinc-400 bg-white/5 border border-white/5 px-2.5 py-1 rounded-md uppercase tracking-wider">
                                 {tag}
                             </span>
                         ))}
@@ -594,20 +595,20 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
 
                 {/* Stats Grid - HUD Style */}
                 <div className="grid grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden mb-6">
-                    <div className="bg-[#0e0e10]/80 p-3 md:p-4 group-hover:bg-[#141416] transition-colors backdrop-blur-sm">
+                    <div className="bg-[#0e0e10] p-3 md:p-4 group-hover:bg-[#141416] transition-colors">
                         <span className="block text-[9px] text-zinc-500 uppercase font-mono mb-1 tracking-widest">Current Bonus</span>
                         <span className="block text-xs md:text-sm text-white font-bold font-rajdhani truncate">{casino.bonus}</span>
                     </div>
-                    <div className="bg-[#0e0e10]/80 p-3 md:p-4 group-hover:bg-[#141416] transition-colors text-right backdrop-blur-sm">
+                    <div className="bg-[#0e0e10] p-3 md:p-4 group-hover:bg-[#141416] transition-colors text-right">
                         <span className="block text-[9px] text-zinc-500 uppercase font-mono mb-1 tracking-widest">Payout Speed</span>
                         <span className="block text-xs md:text-sm text-[#00FFC0] font-bold font-rajdhani truncate">{casino.withdrawalSpeed}</span>
                     </div>
                 </div>
 
-                {/* Action Buttons - Always Visible on Mobile, Reveal on Desktop */}
+                {/* Action Buttons */}
                 <div className="mt-auto grid grid-cols-2 gap-3">
                     <button 
-                        className="h-12 rounded-xl border border-white/10 hover:border-white/30 bg-white/5 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all font-orbitron"
+                        className="h-12 rounded-xl border border-white/10 hover:border-white/30 bg-white/5 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-colors font-orbitron"
                         onClick={(e) => { e.stopPropagation(); onSelect(casino); }}
                     >
                         Intel
@@ -617,7 +618,7 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
                         target="_blank"
                         rel="noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="h-12 rounded-xl bg-[#00FFC0] hover:bg-[#00FFC0]/90 text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:shadow-[0_0_25px_rgba(0,255,192,0.4)] transition-all font-orbitron"
+                        className="h-12 rounded-xl bg-[#00FFC0] hover:bg-[#00FFC0]/90 text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-colors font-orbitron shadow-sm"
                     >
                         Play <ExternalLink className="w-3 h-3" />
                     </a>
@@ -625,7 +626,7 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
             </div>
         </div>
     );
-};
+});
 
 const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino, onBack }) => {
     const [activeTab, setActiveTab] = useState(0);
@@ -635,15 +636,12 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
     return (
         <div className="min-h-screen bg-[#050505] text-white pb-32 relative overflow-x-hidden animate-fadeIn font-rajdhani">
             
-            {/* Background Noise */}
-            <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-15 pointer-events-none z-0 mix-blend-overlay"></div>
-
-            {/* Sticky Command Bar (Replaces Floating HUD) */}
-            <div className="sticky top-16 z-40 w-full bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+            {/* Sticky Command Bar */}
+            <div className="sticky top-16 z-40 w-full bg-black/90 backdrop-blur-md border-b border-white/5 transition-all duration-300">
                 <div className="max-w-[1800px] mx-auto px-4 py-3 flex items-center justify-between">
                      <button 
                         onClick={onBack}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-[#00FFC0]/50 transition-all group"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-[#00FFC0]/50 transition-colors group"
                     >
                         <ArrowLeft className="w-4 h-4 text-[#00FFC0] group-hover:-translate-x-1 transition-transform" />
                         <span className="text-xs font-bold font-orbitron uppercase tracking-wider text-zinc-300 group-hover:text-white">System Grid</span>
@@ -652,27 +650,34 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                     {/* Mobile Context Header */}
                     <div className="flex items-center gap-3 lg:hidden">
                          <span className="text-xs font-bold font-orbitron uppercase text-white">{casino.name}</span>
-                         <div className={`w-2 h-2 rounded-full ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0] shadow-[0_0_10px_#00FFC0]' : 'bg-yellow-500'}`}></div>
+                         <div className={`w-2 h-2 rounded-full ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]' : 'bg-yellow-500'}`}></div>
                     </div>
                 </div>
             </div>
 
-            {/* Cinematic Hero Section */}
+            {/* Cinematic Hero Section - Optimized Gradient over Blur */}
             <div className="relative min-h-[60vh] w-full overflow-hidden flex items-end pb-16 border-b border-white/5">
-                {/* Blurred Backdrop */}
-                <div className="absolute inset-0 bg-cover bg-center blur-[120px] opacity-20 scale-110 transform transition-transform duration-[30s] hover:scale-125" style={{ backgroundImage: `url(${casino.logo})` }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent"></div>
-                
+                 {/* OPTIMIZATION: Use a radial gradient instead of a full-image blur for better performance */}
+                <div className="absolute inset-0 bg-[#050505]">
+                     <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent z-10"></div>
+                     {/* Pre-calculated accent color gradient based on brand (simulated with green/blue mix here) */}
+                     <div className="absolute top-0 left-0 right-0 h-[80%] opacity-20 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00FFC0]/30 via-transparent to-transparent"></div>
+                </div>
+
                 {/* Data Stream Line */}
-                <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#00FFC0]/30 to-[#00FFC0] hidden lg:block"></div>
+                <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#00FFC0]/30 to-[#00FFC0] hidden lg:block z-10"></div>
 
                 <div className="relative z-10 w-full max-w-[1800px] mx-auto px-4 lg:px-12">
                     <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12">
                         
-                        {/* Logo Box with Glow */}
-                        <div className="w-32 h-32 lg:w-48 lg:h-48 rounded-[2rem] bg-[#0e0e10] border border-white/10 shadow-[0_0_80px_rgba(0,255,192,0.15)] p-3 relative shrink-0 backdrop-blur-2xl group">
-                            <img src={casino.logo} alt="" className="w-full h-full object-cover rounded-[1.5rem] grayscale group-hover:grayscale-0 transition-all duration-500" />
-                            <div className="absolute inset-0 rounded-[2rem] border border-[#00FFC0]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        {/* Logo Box */}
+                        <div className="w-32 h-32 lg:w-48 lg:h-48 rounded-[2rem] bg-[#0e0e10] border border-white/10 p-3 relative shrink-0 group">
+                            <img 
+                                src={casino.logo} 
+                                alt="" 
+                                className="w-full h-full object-cover rounded-[1.5rem]" 
+                                loading="lazy"
+                            />
                         </div>
 
                         {/* Title Info */}
@@ -680,16 +685,16 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                             <div>
                                 <div className="flex flex-wrap items-center gap-4 mb-4">
                                     {casino.specialRanking === 'ETERNAL CROWN' && (
-                                        <div className="px-4 py-1.5 rounded-full bg-[#00FFC0]/10 border border-[#00FFC0]/30 text-[#00FFC0] text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 shadow-[0_0_20px_rgba(0,255,192,0.2)] backdrop-blur-md">
+                                        <div className="px-4 py-1.5 rounded-full bg-[#00FFC0]/10 border border-[#00FFC0]/30 text-[#00FFC0] text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
                                             <Gem className="w-3 h-3" /> Eternal Crown
                                         </div>
                                     )}
                                      <div className={`px-4 py-1.5 rounded-full border text-[10px] font-bold font-mono flex items-center gap-2 ${casino.status === 'VERIFIED' ? 'border-[#00FFC0]/30 bg-[#00FFC0]/5 text-[#00FFC0]' : 'border-yellow-500/30 bg-yellow-500/5 text-yellow-500'}`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0] animate-pulse shadow-[0_0_10px_#00FFC0]' : 'bg-yellow-500'}`}></div>
+                                        <div className={`w-1.5 h-1.5 rounded-full ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0] animate-pulse' : 'bg-yellow-500'}`}></div>
                                         {casino.status === 'VERIFIED' ? 'VERIFIED NODE' : 'UNVERIFIED NODE'}
                                     </div>
                                 </div>
-                                <h1 className="text-5xl lg:text-8xl font-black uppercase tracking-tighter text-white drop-shadow-2xl font-orbitron leading-[0.9]">
+                                <h1 className="text-5xl lg:text-8xl font-black uppercase tracking-tighter text-white font-orbitron leading-[0.9]">
                                     {casino.name}
                                 </h1>
                             </div>
@@ -720,13 +725,13 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                 {/* Left Column: Tabs & Data (8 Cols) */}
                 <div className="lg:col-span-8 space-y-8">
                     
-                    {/* Tab Switcher - Cyber Segment Style */}
+                    {/* Tab Switcher */}
                     <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
                         {['OPERATIONAL INTEL', 'KYC & COMPLIANCE', 'COMMUNITY FEED'].map((tab, i) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(i)}
-                                className={`px-8 py-4 rounded-xl text-xs font-black uppercase tracking-[0.15em] transition-all whitespace-nowrap border ${activeTab === i ? 'bg-[#00FFC0] text-black border-[#00FFC0] shadow-[0_0_25px_rgba(0,255,192,0.4)]' : 'bg-[#0e0e10] text-zinc-500 border-white/5 hover:border-white/20 hover:text-white'}`}
+                                className={`px-8 py-4 rounded-xl text-xs font-black uppercase tracking-[0.15em] transition-colors whitespace-nowrap border ${activeTab === i ? 'bg-[#00FFC0] text-black border-[#00FFC0]' : 'bg-[#0e0e10] text-zinc-500 border-white/5 hover:border-white/20 hover:text-white'}`}
                             >
                                 {tab}
                             </button>
@@ -736,10 +741,10 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                     {/* Tab 1: Operational Intel */}
                     {activeTab === 0 && (
                         <div className="space-y-6 animate-fade-up">
-                            {/* Advisory Banner - Tech Style */}
-                            <div className={`p-8 rounded-3xl border backdrop-blur-md relative overflow-hidden ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]/5 border-[#00FFC0]/20' : 'bg-yellow-500/5 border-yellow-500/20'}`}>
+                            {/* Advisory Banner */}
+                            <div className={`p-8 rounded-3xl border relative overflow-hidden ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]/5 border-[#00FFC0]/20' : 'bg-yellow-500/5 border-yellow-500/20'}`}>
                                 <div className="flex items-start gap-6 relative z-10">
-                                    <div className={`p-4 rounded-2xl ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]/10 shadow-[0_0_20px_rgba(0,255,192,0.1)]' : 'bg-yellow-500/10'}`}>
+                                    <div className={`p-4 rounded-2xl ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]/10' : 'bg-yellow-500/10'}`}>
                                         {casino.status === 'VERIFIED' ? <ShieldCheck className="w-8 h-8 text-[#00FFC0]" /> : <ShieldAlert className="w-8 h-8 text-yellow-500" />}
                                     </div>
                                     <div>
@@ -753,7 +758,7 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
 
                             {/* Corporate & Tech Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="bg-[#08080a] border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-all group">
+                                <div className="bg-[#08080a] border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors group">
                                     <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-8 flex items-center gap-3 font-orbitron">
                                         <Landmark className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" /> Corporate Structure
                                     </h4>
@@ -774,8 +779,8 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                                 </div>
 
                                 {casino.zeroEdge && (
-                                     <div className="bg-gradient-to-br from-[#00FFC0]/5 to-[#08080a] border border-[#00FFC0]/20 rounded-3xl p-8 relative overflow-hidden group hover:shadow-[0_0_50px_rgba(0,255,192,0.1)] transition-all">
-                                        <div className="absolute top-0 right-0 w-48 h-48 bg-[#00FFC0] blur-[100px] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"></div>
+                                     <div className="bg-gradient-to-br from-[#00FFC0]/5 to-[#08080a] border border-[#00FFC0]/20 rounded-3xl p-8 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-48 h-48 bg-[#00FFC0] blur-[100px] opacity-10 pointer-events-none"></div>
                                         <h4 className="text-xs font-bold text-[#00FFC0] uppercase tracking-[0.2em] mb-6 flex items-center gap-3 font-orbitron">
                                             <Zap className="w-4 h-4" /> Tactical Advantage
                                         </h4>
@@ -792,10 +797,10 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                                 <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-8 font-orbitron">Platform Capabilities</h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                     {Object.entries(casino.features).map(([key, val]) => (
-                                        <div key={key} className="flex items-center justify-between p-4 rounded-xl bg-[#121214] border border-white/5 hover:border-[#00FFC0]/30 transition-colors group">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 group-hover:text-white transition-colors">{key.replace(/([A-Z])/g, ' $1')}</span>
+                                        <div key={key} className="flex items-center justify-between p-4 rounded-xl bg-[#121214] border border-white/5 hover:border-[#00FFC0]/30 transition-colors">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{key.replace(/([A-Z])/g, ' $1')}</span>
                                             {val ? 
-                                                <CheckCircle2 className="w-4 h-4 text-[#00FFC0] drop-shadow-[0_0_5px_rgba(0,255,192,0.5)]" /> : 
+                                                <CheckCircle2 className="w-4 h-4 text-[#00FFC0]" /> : 
                                                 <X className="w-4 h-4 text-zinc-800" />
                                             }
                                         </div>
@@ -816,7 +821,7 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                                         const isActive = casino.kycLevel === level;
                                         const color = level === 'NONE' ? 'bg-[#00FFC0]' : level === 'LOW' ? 'bg-yellow-500' : 'bg-red-500';
                                         return (
-                                            <div key={level} className={`flex-1 h-3 rounded-full transition-all duration-500 ${isActive ? color + ' shadow-[0_0_20px_currentColor] scale-y-110' : 'bg-[#1a1a1c]'}`}></div>
+                                            <div key={level} className={`flex-1 h-3 rounded-full transition-all duration-500 ${isActive ? color : 'bg-[#1a1a1c]'}`}></div>
                                         )
                                     })}
                                 </div>
@@ -846,8 +851,8 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                     {/* Tab 3: Terminal */}
                     {activeTab === 2 && (
                         <div className="bg-[#050505] rounded-3xl border border-[#333] overflow-hidden font-mono text-xs shadow-2xl animate-fade-up relative">
-                            {/* Scanline */}
-                            <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_0%,rgba(0,255,192,0.02)_50%,transparent_100%)] bg-[length:100%_4px] animate-[scanline_6s_linear_infinite] z-10"></div>
+                            {/* Scanline - CSS only */}
+                             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_0%,rgba(0,255,192,0.02)_50%,transparent_100%)] bg-[length:100%_4px] z-10"></div>
                             
                             <div className="bg-[#0e0e10] p-4 border-b border-[#333] flex items-center justify-between">
                                 <div className="flex gap-2">
@@ -864,13 +869,13 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                                     <div key={i} className="flex flex-col sm:flex-row gap-2 sm:gap-6 border-l border-[#333] pl-6 py-2">
                                         <span className="text-zinc-600 shrink-0">[{new Date().toLocaleTimeString()}]</span>
                                         <span className="text-blue-400 font-bold">TX_VERIFIED</span>
-                                        <span className="text-zinc-300 break-all font-bold">Hash: 0x{Math.random().toString(16).slice(2, 20)}...</span>
+                                        <span className="text-zinc-300 break-all font-bold">Hash: 0x...{Math.random().toString(16).slice(2, 8)}</span>
                                     </div>
                                 ))}
                                 <div className="animate-pulse text-[#00FFC0] mt-6">_</div>
                             </div>
                              <div className="p-6 border-t border-[#333] bg-[#0a0a0a] flex justify-center">
-                                <button className="text-[#00FFC0] hover:text-white text-xs uppercase tracking-[0.2em] font-bold font-orbitron border border-[#00FFC0]/30 hover:bg-[#00FFC0]/10 px-8 py-4 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(0,255,192,0.2)]">
+                                <button className="text-[#00FFC0] hover:text-white text-xs uppercase tracking-[0.2em] font-bold font-orbitron border border-[#00FFC0]/30 hover:bg-[#00FFC0]/10 px-8 py-4 rounded-xl transition-colors">
                                     Submit New Intelligence
                                 </button>
                              </div>
@@ -881,7 +886,7 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                 {/* Right Column: Stats & CTA (4 Cols) */}
                 <div className="lg:col-span-4 space-y-8">
                     {/* Hero CTA Card */}
-                    <div className="relative rounded-[2rem] overflow-hidden border border-[#00FFC0]/30 bg-[#00FFC0]/5 p-10 text-center group shadow-[0_0_50px_rgba(0,255,192,0.05)]">
+                    <div className="relative rounded-[2rem] overflow-hidden border border-[#00FFC0]/30 bg-[#00FFC0]/5 p-10 text-center group">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#00FFC0]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <p className="text-xs font-bold text-[#00FFC0] uppercase tracking-[0.25em] mb-6">Active Bounty</p>
@@ -891,7 +896,7 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                             href={`${casino.website}?ref=zapway`} 
                             target="_blank" 
                             rel="noreferrer"
-                            className="block w-full py-5 bg-[#00FFC0] text-black font-black uppercase tracking-[0.15em] text-sm rounded-xl hover:bg-white hover:scale-[1.02] transition-all shadow-[0_0_40px_rgba(0,255,192,0.3)] font-orbitron"
+                            className="block w-full py-5 bg-[#00FFC0] text-black font-black uppercase tracking-[0.15em] text-sm rounded-xl hover:bg-white hover:scale-[1.02] transition-all font-orbitron"
                         >
                             Claim Bonus
                         </a>
@@ -908,7 +913,7 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                             </div>
                             <div className="text-2xl font-bold text-white font-rajdhani">{casino.withdrawalSpeed}</div>
                             <div className="h-1.5 w-full bg-[#222] rounded-full mt-6 overflow-hidden">
-                                <div className="h-full bg-[#00FFC0] w-[95%] shadow-[0_0_15px_#00FFC0]"></div>
+                                <div className="h-full bg-[#00FFC0] w-[95%]"></div>
                             </div>
                         </div>
 
@@ -939,8 +944,8 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                 </div>
             </div>
 
-            {/* Mobile Sticky Footer Action Dock */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#09090b]/80 backdrop-blur-xl border-t border-white/10 z-50 lg:hidden pb-[calc(1rem+env(safe-area-inset-bottom))]">
+            {/* Mobile Sticky Footer Action Dock - Simplified Z-Index */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#09090b]/95 border-t border-white/10 z-30 lg:hidden pb-[calc(1rem+env(safe-area-inset-bottom))]">
                 <div className="flex gap-3 items-center max-w-md mx-auto">
                     <div className="flex-1 p-2">
                         <p className="text-[10px] text-zinc-500 uppercase font-orbitron tracking-wider">Active Bonus</p>
@@ -950,7 +955,7 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                         href={`${casino.website}?ref=zapway`} 
                         target="_blank" 
                         rel="noreferrer"
-                        className="px-8 py-4 bg-[#00FFC0] text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-white transition-colors shadow-[0_0_20px_rgba(0,255,192,0.3)] font-orbitron"
+                        className="px-8 py-4 bg-[#00FFC0] text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-white transition-colors font-orbitron"
                     >
                         Play Now
                     </a>
@@ -984,16 +989,14 @@ const CasinoDirectoryPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans pb-20 relative selection:bg-[#00FFC0] selection:text-black animate-fadeIn">
             
-            {/* Deep Cybernetic Background */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#0a0a0c_0%,_#000000_100%)]"></div>
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-[#00FFC0]/5 blur-[120px] rounded-full opacity-30"></div>
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] opacity-20"></div>
+            {/* Simplified Background for Performance */}
+            <div className="fixed inset-0 pointer-events-none z-0 bg-[#050505]">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#00FFC0]/5 blur-[120px] rounded-full opacity-20"></div>
             </div>
 
             {/* Main Floating Container */}
             <div className="relative z-10 pt-8 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-[1900px] mx-auto bg-[#050505]/50 rounded-2xl md:rounded-[3rem] border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden min-h-[calc(100vh-4rem)] relative backdrop-blur-sm">
+                <div className="max-w-[1900px] mx-auto bg-[#050505]/50 rounded-2xl md:rounded-[3rem] border border-white/5 overflow-hidden min-h-[calc(100vh-4rem)] relative">
                     
                     {/* Inner Top Glow */}
                     <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#00FFC0]/50 to-transparent"></div>
@@ -1002,22 +1005,22 @@ const CasinoDirectoryPage: React.FC = () => {
                     <div className="relative pt-16 pb-12 px-6 lg:px-12">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
                             <div>
-                                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-[#00FFC0]/20 bg-[#00FFC0]/5 text-[#00FFC0] text-[10px] font-bold uppercase tracking-[0.25em] mb-8 backdrop-blur-md animate-fade-up shadow-[0_0_20px_rgba(0,255,192,0.1)]">
+                                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-[#00FFC0]/20 bg-[#00FFC0]/5 text-[#00FFC0] text-[10px] font-bold uppercase tracking-[0.25em] mb-8 backdrop-blur-sm shadow-[0_0_20px_rgba(0,255,192,0.1)]">
                                     <Zap className="w-3 h-3" /> Live Grid Status // Online
                                 </div>
-                                <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none animate-fade-up font-orbitron" style={{ animationDelay: '0.1s' }}>
-                                    Operator <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFC0] via-white to-[#00FFC0] animate-pulse-glow">Grid</span>
+                                <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none font-orbitron">
+                                    Operator <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFC0] via-white to-[#00FFC0]">Grid</span>
                                 </h1>
                             </div>
                             
-                            {/* Stats Ticker */}
-                            <div className="flex gap-4 overflow-x-auto no-scrollbar w-full md:w-auto animate-fade-up pb-2" style={{ animationDelay: '0.2s' }}>
+                            {/* Stats Ticker - Optimized */}
+                            <div className="flex gap-4 overflow-x-auto no-scrollbar w-full md:w-auto pb-2">
                                 {[
                                     { label: 'Active Nodes', value: CASINOS.length, color: 'text-white' },
                                     { label: 'Compliance', value: '98.2%', color: 'text-[#00FFC0]' },
                                     { label: '24h Volume', value: '$42.5M', color: 'text-blue-400' }
                                 ].map((stat, i) => (
-                                    <div key={i} className="bg-[#0e0e10] border border-white/5 p-5 rounded-2xl backdrop-blur-md min-w-[160px] hover:border-[#00FFC0]/30 transition-colors group">
+                                    <div key={i} className="bg-[#0e0e10] border border-white/5 p-5 rounded-2xl min-w-[160px] hover:border-[#00FFC0]/30 transition-colors group">
                                         <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-2 font-orbitron group-hover:text-[#00FFC0] transition-colors">{stat.label}</p>
                                         <p className={`text-3xl font-black font-rajdhani ${stat.color}`}>{stat.value}</p>
                                     </div>
@@ -1026,8 +1029,8 @@ const CasinoDirectoryPage: React.FC = () => {
                         </div>
 
                         {/* Command Bar - Floating Glass Strip (Sticky) */}
-                        <div className="sticky top-16 z-40 animate-fade-up transition-all duration-300" style={{ animationDelay: '0.3s' }}>
-                            <div className="max-w-[1800px] mx-auto bg-[#0e0e10]/80 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-3 items-center relative overflow-hidden">
+                        <div className="sticky top-16 z-40 transition-all duration-300">
+                            <div className="max-w-[1800px] mx-auto bg-[#0e0e10]/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-3 items-center relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                                 
                                 <div className="relative flex-1 w-full group">
@@ -1046,7 +1049,7 @@ const CasinoDirectoryPage: React.FC = () => {
                                         <button
                                             key={cat}
                                             onClick={() => setActiveCategory(cat)}
-                                            className={`px-6 py-4 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border font-orbitron ${activeCategory === cat ? 'bg-[#00FFC0] text-black border-[#00FFC0] shadow-[0_0_20px_rgba(0,255,192,0.3)]' : 'bg-[#050505] text-zinc-500 border-white/5 hover:border-white/20 hover:text-white'}`}
+                                            className={`px-6 py-4 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap border font-orbitron ${activeCategory === cat ? 'bg-[#00FFC0] text-black border-[#00FFC0]' : 'bg-[#050505] text-zinc-500 border-white/5 hover:border-white/20 hover:text-white'}`}
                                         >
                                             {cat.replace('_', ' ')}
                                         </button>
@@ -1070,7 +1073,7 @@ const CasinoDirectoryPage: React.FC = () => {
                         </div>
                         
                         {filteredCasinos.length === 0 && (
-                            <div className="py-32 text-center border border-dashed border-white/10 rounded-[3rem] bg-[#0a0a0a]/50 mt-12 backdrop-blur-sm">
+                            <div className="py-32 text-center border border-dashed border-white/10 rounded-[3rem] bg-[#0a0a0a]/50 mt-12">
                                 <Activity className="w-16 h-16 text-zinc-800 mx-auto mb-6" />
                                 <h3 className="text-2xl font-black text-zinc-600 uppercase tracking-widest font-orbitron">No Signal Found</h3>
                             </div>
