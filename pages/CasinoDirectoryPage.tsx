@@ -1,10 +1,25 @@
 
-import React, { useState, useMemo, useEffect, useContext } from 'react';
-import { Icons } from '../components/icons';
-import { Button } from '../components/Button';
-import { Input } from '../components/Input';
-import { Card } from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import React, { useState, useMemo, useEffect } from 'react';
+import { 
+    Search, 
+    ShieldCheck, 
+    ShieldAlert, 
+    Cpu, 
+    Gem, 
+    ChevronLeft, 
+    ExternalLink, 
+    Terminal, 
+    Globe, 
+    Zap, 
+    Activity, 
+    Filter,
+    X,
+    CheckCircle2,
+    Trophy,
+    Timer,
+    Landmark,
+    ArrowLeft
+} from 'lucide-react';
 
 // --- TYPES ---
 interface Casino {
@@ -512,84 +527,99 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
     return (
         <div 
             onClick={() => onSelect(casino)}
-            className={`group relative rounded-xl overflow-hidden cursor-pointer flex flex-col h-full animate-fade-up active:scale-[0.98] transition-all duration-300 hover:-translate-y-1`}
-            style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'both' }}
+            className="group relative rounded-2xl overflow-hidden cursor-pointer flex flex-col h-full bg-[#0c0c0e]/80 backdrop-blur-sm border border-white/5 hover:border-[#00FFC0]/40 transition-all duration-500 hover:shadow-[0_0_50px_-10px_rgba(0,255,192,0.1)] active:scale-[0.98] animate-fade-up"
+            style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'backwards' }}
         >
-            {/* Main Background with Gradient & Texture */}
-            <div className="absolute inset-0 bg-[#080808]"></div>
-            <div className={`absolute inset-0 bg-gradient-to-b ${isCrown ? 'from-neon-surge/10 to-black' : 'from-white/5 to-black'} opacity-50 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            {/* Matte Background & Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#161618] to-[#08080a] opacity-100 z-0"></div>
             
-            {/* Animated Border/Glow */}
-            <div className={`absolute inset-0 border ${isCrown ? 'border-neon-surge/30' : 'border-white/10'} rounded-xl group-hover:border-opacity-100 transition-all duration-500 z-10 pointer-events-none`}></div>
-            <div className={`absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black to-transparent z-10`}></div>
+            {/* Cyber Scan Effect (Hover) */}
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(0,255,192,0.03)_50%,transparent_100%)] bg-[length:100%_200%] translate-y-[-100%] group-hover:animate-scan-line opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"></div>
+            
+            {/* Crown Glow Effect */}
+            {isCrown && (
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00FFC0] blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+            )}
 
-            {/* Content Layer */}
-            <div className="relative z-20 p-4 md:p-5 flex flex-col h-full">
+            {/* Content */}
+            <div className="relative z-20 p-5 md:p-6 flex flex-col h-full">
                 
-                {/* Header: Logo & Score */}
-                <div className="flex justify-between items-start mb-4 md:mb-6">
-                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-xl bg-black border ${isCrown ? 'border-neon-surge/50 shadow-[0_0_20px_rgba(0,255,192,0.15)]' : 'border-white/10'} p-1 relative overflow-hidden group-hover:scale-105 transition-transform duration-300`}>
-                        <img src={casino.logo} alt={casino.name} className="w-full h-full object-cover rounded-lg" loading="lazy" />
-                        {/* Shine effect on logo */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                    </div>
-                    <div className="text-right">
-                        <div className={`text-2xl md:text-3xl font-black font-orbitron tracking-tighter flex items-center justify-end gap-1 ${casino.rating >= 4.8 ? 'text-neon-surge drop-shadow-[0_0_8px_rgba(0,255,192,0.5)]' : 'text-white'}`}>
-                            {casino.rating.toFixed(1)}
+                {/* Header: Logo & Rating */}
+                <div className="flex justify-between items-start mb-6">
+                    <div className="relative">
+                        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#18181b] p-1.5 overflow-hidden border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-300 group-hover:border-[#00FFC0]/30`}>
+                            <img src={casino.logo} alt={casino.name} className="w-full h-full object-cover rounded-xl" />
                         </div>
-                        <div className="text-[8px] md:text-[9px] text-text-tertiary uppercase font-jetbrains-mono tracking-widest mt-1">Trust Score</div>
+                        {isCrown && (
+                            <div className="absolute -top-3 -left-3 bg-[#00FFC0] text-black text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter shadow-[0_0_15px_#00FFC0]">
+                                Crown
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="text-right">
+                         <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1.5">
+                                <span className={`text-3xl md:text-4xl font-black tracking-tighter font-orbitron ${casino.rating >= 4.5 ? 'text-[#00FFC0] drop-shadow-[0_0_15px_rgba(0,255,192,0.4)]' : 'text-white'}`}>
+                                    {casino.rating.toFixed(1)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1 mt-1">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < Math.floor(casino.rating) ? 'bg-[#00FFC0] shadow-[0_0_5px_#00FFC0]' : 'bg-[#333]'}`}></div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Info Block */}
-                <div className="flex-1">
+                {/* Title & Badges */}
+                <div className="mb-5">
                     <div className="flex items-center gap-2 mb-3">
-                        <h3 className="font-orbitron text-base md:text-lg font-bold text-white uppercase tracking-wide truncate group-hover:text-neon-surge transition-colors">{casino.name}</h3>
-                        {isCrown && <Icons.Gem className="w-3 h-3 text-neon-surge animate-pulse" />}
-                        {casino.status === 'VERIFIED' && !isCrown && <Icons.Verified className="w-3 h-3 text-blue-500" />}
+                        <h3 className="text-xl md:text-2xl font-bold text-white uppercase tracking-tight group-hover:text-[#00FFC0] transition-colors truncate font-orbitron">
+                            {casino.name}
+                        </h3>
+                        {casino.status === 'VERIFIED' && (
+                            <ShieldCheck className="w-5 h-5 text-[#00FFC0] drop-shadow-[0_0_8px_rgba(0,255,192,0.5)]" />
+                        )}
                     </div>
-                    
-                    {/* Tech Pills */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
+                    <div className="flex flex-wrap gap-2">
                         {casino.tags.slice(0, 2).map(tag => (
-                            <span key={tag} className="text-[9px] font-bold px-2 py-0.5 rounded-[4px] bg-white/5 text-zinc-400 uppercase border border-white/5 backdrop-blur-sm">
+                            <span key={tag} className="text-[10px] font-bold text-zinc-400 bg-white/5 border border-white/5 px-2.5 py-1 rounded-md uppercase tracking-wider backdrop-blur-sm">
                                 {tag}
                             </span>
                         ))}
                     </div>
+                </div>
 
-                    {/* Data Grid */}
-                    <div className="grid grid-cols-2 gap-px bg-white/5 rounded-lg overflow-hidden border border-white/5">
-                        <div className="bg-black/80 p-2 backdrop-blur-md">
-                            <span className="block text-[8px] text-text-tertiary uppercase font-jetbrains-mono mb-0.5">Bonus</span>
-                            <span className="block text-[10px] text-white font-bold font-jetbrains-mono truncate">{casino.bonus}</span>
-                        </div>
-                        <div className="bg-black/80 p-2 backdrop-blur-md text-right">
-                            <span className="block text-[8px] text-text-tertiary uppercase font-jetbrains-mono mb-0.5">Speed</span>
-                            <span className="block text-[10px] text-neon-surge font-bold font-jetbrains-mono truncate">{casino.withdrawalSpeed}</span>
-                        </div>
+                {/* Stats Grid - HUD Style */}
+                <div className="grid grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden mb-6">
+                    <div className="bg-[#0e0e10]/80 p-3 md:p-4 group-hover:bg-[#141416] transition-colors backdrop-blur-sm">
+                        <span className="block text-[9px] text-zinc-500 uppercase font-mono mb-1 tracking-widest">Current Bonus</span>
+                        <span className="block text-xs md:text-sm text-white font-bold font-rajdhani truncate">{casino.bonus}</span>
+                    </div>
+                    <div className="bg-[#0e0e10]/80 p-3 md:p-4 group-hover:bg-[#141416] transition-colors text-right backdrop-blur-sm">
+                        <span className="block text-[9px] text-zinc-500 uppercase font-mono mb-1 tracking-widest">Payout Speed</span>
+                        <span className="block text-xs md:text-sm text-[#00FFC0] font-bold font-rajdhani truncate">{casino.withdrawalSpeed}</span>
                     </div>
                 </div>
-                
-                <div className="h-px w-full bg-white/5 my-4"></div>
 
-                {/* Action Buttons */}
-                <div className="grid grid-cols-2 gap-2">
-                    <Button 
-                        variant="ghost" 
-                        className="h-12 text-[10px] bg-white/5 hover:bg-white/10 text-white font-orbitron uppercase tracking-wider border border-white/10 rounded-lg"
+                {/* Action Buttons - Always Visible on Mobile, Reveal on Desktop */}
+                <div className="mt-auto grid grid-cols-2 gap-3">
+                    <button 
+                        className="h-12 rounded-xl border border-white/10 hover:border-white/30 bg-white/5 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all font-orbitron"
                         onClick={(e) => { e.stopPropagation(); onSelect(casino); }}
                     >
-                        INTEL
-                    </Button>
+                        Intel
+                    </button>
                     <a 
                         href={`${casino.website}?ref=zapway`}
-                        target="_blank" 
-                        rel="noopener noreferrer"
+                        target="_blank"
+                        rel="noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center justify-center h-12 rounded-lg bg-neon-surge text-black text-[10px] font-bold font-orbitron uppercase tracking-wider hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all"
+                        className="h-12 rounded-xl bg-[#00FFC0] hover:bg-[#00FFC0]/90 text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:shadow-[0_0_25px_rgba(0,255,192,0.4)] transition-all font-orbitron"
                     >
-                        PLAY
+                        Play <ExternalLink className="w-3 h-3" />
                     </a>
                 </div>
             </div>
@@ -598,219 +628,334 @@ const CasinoCard: React.FC<{ casino: Casino; onSelect: (c: Casino) => void; inde
 };
 
 const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino, onBack }) => {
-    const appContext = useContext(AppContext);
     const [activeTab, setActiveTab] = useState(0);
-    const isVerified = casino.status === 'VERIFIED';
-    
-    useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
+
+    useEffect(() => { window.scrollTo(0,0); }, []);
 
     return (
-        <div className="min-h-screen bg-black text-white font-rajdhani pb-32 md:pb-12 relative">
-             {/* Fixed Background */}
-            <div className="fixed inset-0 pointer-events-none">
-                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_center,_var(--tw-gradient-stops))] from-zinc-900/50 via-black to-black"></div>
-                 <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neon-surge/5 to-transparent opacity-30"></div>
-            </div>
-
-             {/* Sticky Context Bar - Precise Mobile Placement */}
-             <div className="sticky top-[64px] z-40 bg-black/90 backdrop-blur-xl border-b border-white/10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 w-[calc(100%_+_2rem)] sm:w-[calc(100%_+_3rem)] lg:w-[calc(100%_+_4rem)] flex justify-between items-center h-12 shadow-lg animate-fade-in-up">
-                 <button onClick={onBack} className="flex items-center gap-2 text-xs font-orbitron uppercase text-text-tertiary hover:text-neon-surge transition-colors group">
-                     <Icons.ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Return
-                 </button>
-                 <div className="flex items-center gap-3">
-                     <span className="text-[10px] font-bold font-orbitron uppercase hidden sm:inline text-white">{casino.name}</span>
-                     <div className={`px-2 py-0.5 rounded text-[9px] font-bold font-jetbrains-mono border ${isVerified ? 'bg-neon-surge/10 text-neon-surge border-neon-surge/30' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}>
-                         {isVerified ? 'VERIFIED NODE' : 'UNVERIFIED'}
-                     </div>
-                 </div>
-             </div>
+        <div className="min-h-screen bg-[#050505] text-white pb-32 relative overflow-x-hidden animate-fadeIn font-rajdhani">
             
-            {/* Cinematic Hero */}
-            <div className="relative w-full overflow-hidden border-b border-white/10 bg-[#050505]">
-                {/* Blurred Backdrop Image */}
-                <div className="absolute inset-0 opacity-30 bg-cover bg-center blur-3xl scale-110" style={{ backgroundImage: `url(${casino.logo})` }}></div>
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                
-                <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-20 flex flex-col md:flex-row gap-6 md:gap-8 items-end">
-                    <div className="w-24 h-24 md:w-40 md:h-40 rounded-2xl border border-white/10 bg-black p-2 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 backdrop-blur-md">
-                        <img src={casino.logo} alt="" className="w-full h-full object-cover rounded-xl" />
-                    </div>
-                    <div className="flex-1 mb-1">
-                        <div className="flex items-center gap-3 mb-2">
-                            <h1 className="text-3xl md:text-7xl font-black font-orbitron uppercase tracking-tighter text-white leading-none shadow-black drop-shadow-lg">
-                                {casino.name}
-                            </h1>
-                             {casino.specialRanking === 'ETERNAL CROWN' && <Icons.Gem className="w-5 h-5 md:w-8 md:h-8 text-neon-surge animate-pulse" />}
-                        </div>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                            {casino.tags.map(t => <span key={t} className="text-[9px] font-bold uppercase bg-white/10 text-white px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">{t}</span>)}
-                        </div>
-                    </div>
-                    <div className="mb-1 text-right hidden md:block">
-                        <div className="flex items-end justify-end gap-2">
-                            <span className="text-6xl font-black font-orbitron text-neon-surge tracking-tighter drop-shadow-[0_0_15px_rgba(0,255,192,0.4)]">{casino.rating.toFixed(1)}</span>
-                            <span className="text-2xl text-white/50 font-orbitron mb-2">/ 5.0</span>
-                        </div>
-                        <div className="text-xs font-jetbrains-mono text-text-tertiary uppercase tracking-widest mt-1">TRUST SCORE VERIFIED</div>
+            {/* Background Noise */}
+            <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-15 pointer-events-none z-0 mix-blend-overlay"></div>
+
+            {/* Sticky Command Bar (Replaces Floating HUD) */}
+            <div className="sticky top-16 z-40 w-full bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+                <div className="max-w-[1800px] mx-auto px-4 py-3 flex items-center justify-between">
+                     <button 
+                        onClick={onBack}
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-[#00FFC0]/50 transition-all group"
+                    >
+                        <ArrowLeft className="w-4 h-4 text-[#00FFC0] group-hover:-translate-x-1 transition-transform" />
+                        <span className="text-xs font-bold font-orbitron uppercase tracking-wider text-zinc-300 group-hover:text-white">System Grid</span>
+                    </button>
+                    
+                    {/* Mobile Context Header */}
+                    <div className="flex items-center gap-3 lg:hidden">
+                         <span className="text-xs font-bold font-orbitron uppercase text-white">{casino.name}</span>
+                         <div className={`w-2 h-2 rounded-full ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0] shadow-[0_0_10px_#00FFC0]' : 'bg-yellow-500'}`}></div>
                     </div>
                 </div>
             </div>
 
-            {/* Content Grid */}
-            <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
+            {/* Cinematic Hero Section */}
+            <div className="relative min-h-[60vh] w-full overflow-hidden flex items-end pb-16 border-b border-white/5">
+                {/* Blurred Backdrop */}
+                <div className="absolute inset-0 bg-cover bg-center blur-[120px] opacity-20 scale-110 transform transition-transform duration-[30s] hover:scale-125" style={{ backgroundImage: `url(${casino.logo})` }}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent"></div>
                 
-                {/* Tabs - Optimized for Mobile */}
-                <div className="flex border-b border-white/10 mb-8 overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 gap-6 md:gap-0">
-                    {['INTEL', 'COMPLIANCE', 'VPR FEED'].map((tab, i) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(i)}
-                            className={`px-2 md:px-8 py-4 text-xs font-bold font-orbitron uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${activeTab === i ? 'border-neon-surge text-neon-surge bg-neon-surge/5' : 'border-transparent text-text-tertiary hover:text-white hover:bg-white/5'}`}
-                        >
-                            {tab}
-                        </button>
-                    ))}
-                </div>
+                {/* Data Stream Line */}
+                <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#00FFC0]/30 to-[#00FFC0] hidden lg:block"></div>
 
-                {/* Tab 1: INTEL */}
-                {activeTab === 0 && (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
-                        <div className="lg:col-span-2 space-y-6 md:space-y-8">
-                            {/* Advisory */}
-                            <div className={`p-5 border-l-4 rounded-r-lg backdrop-blur-md ${casino.status === 'VERIFIED' ? 'bg-neon-surge/5 border-neon-surge' : 'bg-yellow-500/5 border-yellow-500'}`}>
-                                <h4 className={`text-xs font-bold uppercase font-orbitron mb-2 ${casino.status === 'VERIFIED' ? 'text-neon-surge' : 'text-yellow-500'}`}>OPERATOR ADVISORY // {casino.status}</h4>
-                                <p className="text-sm text-white font-rajdhani leading-relaxed">{casino.advisory}</p>
-                            </div>
+                <div className="relative z-10 w-full max-w-[1800px] mx-auto px-4 lg:px-12">
+                    <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12">
+                        
+                        {/* Logo Box with Glow */}
+                        <div className="w-32 h-32 lg:w-48 lg:h-48 rounded-[2rem] bg-[#0e0e10] border border-white/10 shadow-[0_0_80px_rgba(0,255,192,0.15)] p-3 relative shrink-0 backdrop-blur-2xl group">
+                            <img src={casino.logo} alt="" className="w-full h-full object-cover rounded-[1.5rem] grayscale group-hover:grayscale-0 transition-all duration-500" />
+                            <div className="absolute inset-0 rounded-[2rem] border border-[#00FFC0]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
 
-                            {/* Description */}
-                            <div className="prose prose-invert max-w-none">
-                                <h3 className="text-base md:text-lg font-bold text-white font-orbitron uppercase mb-4 flex items-center gap-2">
-                                    <Icons.FileText className="text-neon-surge w-4 h-4 md:w-5 md:h-5" /> Tactical Overview
-                                </h3>
-                                <p className="text-text-secondary text-sm leading-loose font-medium border-l-2 border-white/10 pl-4">{casino.description}</p>
-                            </div>
-
-                            {/* Features Grid */}
+                        {/* Title Info */}
+                        <div className="flex-1 space-y-6">
                             <div>
-                                <h3 className="text-base md:text-lg font-bold text-white font-orbitron uppercase mb-4 flex items-center gap-2">
-                                    <Icons.Cpu className="text-blue-500 w-4 h-4 md:w-5 md:h-5" /> Platform Capabilities
-                                </h3>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-white/10 border border-white/10 rounded-lg overflow-hidden">
+                                <div className="flex flex-wrap items-center gap-4 mb-4">
+                                    {casino.specialRanking === 'ETERNAL CROWN' && (
+                                        <div className="px-4 py-1.5 rounded-full bg-[#00FFC0]/10 border border-[#00FFC0]/30 text-[#00FFC0] text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 shadow-[0_0_20px_rgba(0,255,192,0.2)] backdrop-blur-md">
+                                            <Gem className="w-3 h-3" /> Eternal Crown
+                                        </div>
+                                    )}
+                                     <div className={`px-4 py-1.5 rounded-full border text-[10px] font-bold font-mono flex items-center gap-2 ${casino.status === 'VERIFIED' ? 'border-[#00FFC0]/30 bg-[#00FFC0]/5 text-[#00FFC0]' : 'border-yellow-500/30 bg-yellow-500/5 text-yellow-500'}`}>
+                                        <div className={`w-1.5 h-1.5 rounded-full ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0] animate-pulse shadow-[0_0_10px_#00FFC0]' : 'bg-yellow-500'}`}></div>
+                                        {casino.status === 'VERIFIED' ? 'VERIFIED NODE' : 'UNVERIFIED NODE'}
+                                    </div>
+                                </div>
+                                <h1 className="text-5xl lg:text-8xl font-black uppercase tracking-tighter text-white drop-shadow-2xl font-orbitron leading-[0.9]">
+                                    {casino.name}
+                                </h1>
+                            </div>
+                            
+                            <p className="text-zinc-400 text-lg lg:text-xl font-medium max-w-3xl leading-relaxed border-l-2 border-[#00FFC0] pl-6">
+                                {casino.description}
+                            </p>
+                        </div>
+
+                        {/* Hero Stats */}
+                        <div className="flex gap-8 lg:gap-12 border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-12">
+                             <div>
+                                 <p className="text-xs font-orbitron text-zinc-500 uppercase tracking-widest mb-1">Trust Score</p>
+                                 <p className="text-4xl lg:text-5xl font-black text-white font-orbitron">{casino.rating.toFixed(1)}</p>
+                             </div>
+                             <div>
+                                 <p className="text-xs font-orbitron text-zinc-500 uppercase tracking-widest mb-1">Bonus</p>
+                                 <p className="text-xl lg:text-2xl font-bold text-[#00FFC0] font-rajdhani">{casino.bonus}</p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="max-w-[1800px] mx-auto px-4 lg:px-12 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+                
+                {/* Left Column: Tabs & Data (8 Cols) */}
+                <div className="lg:col-span-8 space-y-8">
+                    
+                    {/* Tab Switcher - Cyber Segment Style */}
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                        {['OPERATIONAL INTEL', 'KYC & COMPLIANCE', 'COMMUNITY FEED'].map((tab, i) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(i)}
+                                className={`px-8 py-4 rounded-xl text-xs font-black uppercase tracking-[0.15em] transition-all whitespace-nowrap border ${activeTab === i ? 'bg-[#00FFC0] text-black border-[#00FFC0] shadow-[0_0_25px_rgba(0,255,192,0.4)]' : 'bg-[#0e0e10] text-zinc-500 border-white/5 hover:border-white/20 hover:text-white'}`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Tab 1: Operational Intel */}
+                    {activeTab === 0 && (
+                        <div className="space-y-6 animate-fade-up">
+                            {/* Advisory Banner - Tech Style */}
+                            <div className={`p-8 rounded-3xl border backdrop-blur-md relative overflow-hidden ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]/5 border-[#00FFC0]/20' : 'bg-yellow-500/5 border-yellow-500/20'}`}>
+                                <div className="flex items-start gap-6 relative z-10">
+                                    <div className={`p-4 rounded-2xl ${casino.status === 'VERIFIED' ? 'bg-[#00FFC0]/10 shadow-[0_0_20px_rgba(0,255,192,0.1)]' : 'bg-yellow-500/10'}`}>
+                                        {casino.status === 'VERIFIED' ? <ShieldCheck className="w-8 h-8 text-[#00FFC0]" /> : <ShieldAlert className="w-8 h-8 text-yellow-500" />}
+                                    </div>
+                                    <div>
+                                        <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-2 font-orbitron ${casino.status === 'VERIFIED' ? 'text-[#00FFC0]' : 'text-yellow-500'}`}>
+                                            System Advisory Protocol
+                                        </h4>
+                                        <p className="text-base text-zinc-300 leading-relaxed font-mono">{casino.advisory}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Corporate & Tech Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="bg-[#08080a] border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-all group">
+                                    <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-8 flex items-center gap-3 font-orbitron">
+                                        <Landmark className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" /> Corporate Structure
+                                    </h4>
+                                    <div className="space-y-6">
+                                        <div className="flex justify-between border-b border-white/5 pb-3">
+                                            <span className="text-xs text-zinc-500 font-mono tracking-wider">LICENSE</span>
+                                            <span className="text-sm font-bold text-white">{casino.license}</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-white/5 pb-3">
+                                            <span className="text-xs text-zinc-500 font-mono tracking-wider">FOUNDER</span>
+                                            <span className="text-sm font-bold text-white">{casino.founder}</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-white/5 pb-3">
+                                            <span className="text-xs text-zinc-500 font-mono tracking-wider">SIZE</span>
+                                            <span className="text-sm font-bold text-white">{casino.companySize}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {casino.zeroEdge && (
+                                     <div className="bg-gradient-to-br from-[#00FFC0]/5 to-[#08080a] border border-[#00FFC0]/20 rounded-3xl p-8 relative overflow-hidden group hover:shadow-[0_0_50px_rgba(0,255,192,0.1)] transition-all">
+                                        <div className="absolute top-0 right-0 w-48 h-48 bg-[#00FFC0] blur-[100px] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"></div>
+                                        <h4 className="text-xs font-bold text-[#00FFC0] uppercase tracking-[0.2em] mb-6 flex items-center gap-3 font-orbitron">
+                                            <Zap className="w-4 h-4" /> Tactical Advantage
+                                        </h4>
+                                        <h3 className="text-3xl font-black text-white uppercase font-orbitron mb-4">Zero Edge</h3>
+                                        <p className="text-sm text-zinc-400 leading-relaxed font-rajdhani">
+                                            This operator hosts original games with <strong>0% House Edge</strong>. Mathematically fair gameplay verified on-chain.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                             
+                             {/* Features Grid */}
+                            <div className="bg-[#08080a] border border-white/5 rounded-3xl p-8">
+                                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-8 font-orbitron">Platform Capabilities</h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                     {Object.entries(casino.features).map(([key, val]) => (
-                                        <div key={key} className="bg-black/80 p-4 flex items-center justify-between hover:bg-black/60 transition-colors">
-                                            <span className="text-[10px] font-bold uppercase font-jetbrains-mono text-text-secondary">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                            {val ? <Icons.CheckCircle className="w-4 h-4 text-neon-surge drop-shadow-[0_0_5px_rgba(0,255,192,0.5)]" /> : <Icons.X className="w-4 h-4 text-zinc-600" />}
+                                        <div key={key} className="flex items-center justify-between p-4 rounded-xl bg-[#121214] border border-white/5 hover:border-[#00FFC0]/30 transition-colors group">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 group-hover:text-white transition-colors">{key.replace(/([A-Z])/g, ' $1')}</span>
+                                            {val ? 
+                                                <CheckCircle2 className="w-4 h-4 text-[#00FFC0] drop-shadow-[0_0_5px_rgba(0,255,192,0.5)]" /> : 
+                                                <X className="w-4 h-4 text-zinc-800" />
+                                            }
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
-
-                        {/* Sidebar Stats */}
-                        <div className="space-y-6">
-                             <div className="p-6 bg-gradient-to-br from-neon-surge/20 to-black border border-neon-surge/50 rounded-xl text-center relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,255,192,0.2),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                <p className="text-xs font-bold text-neon-surge uppercase font-orbitron mb-3 tracking-widest">Active Bounty</p>
-                                <div className="text-2xl md:text-3xl font-black text-white font-orbitron mb-6 drop-shadow-lg truncate">{casino.bonus}</div>
-                                <a href={`${casino.website}?ref=zapway`} target="_blank" rel="noopener noreferrer" className="block w-full py-4 bg-neon-surge text-black font-bold uppercase font-orbitron text-xs rounded hover:bg-white hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(0,255,192,0.4)]">
-                                    Claim Reward
-                                </a>
+                    )}
+                    
+                    {/* Tab 2: KYC */}
+                    {activeTab === 1 && (
+                         <div className="space-y-6 animate-fade-up">
+                            <div className="bg-[#08080a] border border-white/5 rounded-3xl p-10 text-center relative overflow-hidden">
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-[#00FFC0]/50 to-transparent"></div>
+                                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-8 font-orbitron">Verification Friction Level</h4>
+                                <div className="flex items-center justify-center gap-3 mb-6 max-w-lg mx-auto">
+                                    {['NONE', 'LOW', 'HIGH'].map((level, idx) => {
+                                        const isActive = casino.kycLevel === level;
+                                        const color = level === 'NONE' ? 'bg-[#00FFC0]' : level === 'LOW' ? 'bg-yellow-500' : 'bg-red-500';
+                                        return (
+                                            <div key={level} className={`flex-1 h-3 rounded-full transition-all duration-500 ${isActive ? color + ' shadow-[0_0_20px_currentColor] scale-y-110' : 'bg-[#1a1a1c]'}`}></div>
+                                        )
+                                    })}
+                                </div>
+                                <p className="text-4xl font-black text-white font-orbitron mb-4">{casino.kycLevel} KYC</p>
+                                <p className="text-zinc-400 max-w-lg mx-auto leading-relaxed">
+                                    {casino.kycLevel === 'NONE' 
+                                        ? 'No personal identification required. Crypto-native wallet connection only.' 
+                                        : 'Standard identity verification (ID + Selfie) required for withdrawals exceeding threshold.'}
+                                </p>
                             </div>
-
-                            <div className="p-6 bg-white/5 border border-white/10 rounded-xl backdrop-blur-md">
-                                <h4 className="text-xs font-bold text-text-tertiary uppercase font-orbitron mb-6 tracking-widest">System Status</h4>
-                                <div className="space-y-6">
-                                    <div>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-xs text-text-secondary font-jetbrains-mono uppercase">Withdrawal Speed</span>
-                                            <span className="text-xs font-bold text-neon-surge font-jetbrains-mono">{casino.withdrawalSpeed}</span>
-                                        </div>
-                                        <div className="w-full bg-black h-1.5 rounded-full overflow-hidden border border-white/5">
-                                            <div className="bg-neon-surge h-full w-[95%] shadow-[0_0_10px_#00FFC0]"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
-                                        <div>
-                                            <span className="text-[9px] text-text-tertiary block uppercase font-jetbrains-mono mb-1">Established</span>
-                                            <span className="text-sm font-bold text-white font-orbitron">{casino.established}</span>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-[9px] text-text-tertiary block uppercase font-jetbrains-mono mb-1">License</span>
-                                            <span className="text-sm font-bold text-white font-orbitron">{casino.license}</span>
-                                        </div>
-                                    </div>
+                            
+                             <div className="bg-[#08080a] border border-white/5 rounded-3xl p-8">
+                                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-6 flex items-center gap-2 font-orbitron">
+                                    <Globe className="w-4 h-4" /> Restricted Zones
+                                </h4>
+                                <div className="flex flex-wrap gap-3">
+                                    {casino.restricted.map(r => (
+                                        <span key={r} className="px-4 py-2 rounded-lg bg-red-500/5 text-red-500 border border-red-500/20 text-[10px] font-bold uppercase tracking-wider">
+                                            {r}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                )}
-                
-                {/* Tab 2: Compliance */}
-                {activeTab === 1 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
-                         <div className="p-8 bg-white/5 border border-white/10 rounded-xl flex flex-col items-center justify-center text-center min-h-[240px] relative overflow-hidden">
-                             <div className="absolute inset-0 bg-gradient-to-br from-black/50 to-transparent z-0"></div>
-                             <Icons.Lock className={`w-12 h-12 mb-6 relative z-10 ${casino.kycLevel === 'NONE' ? 'text-neon-surge' : 'text-yellow-500'}`} />
-                             <div className="text-3xl font-black font-orbitron text-white mb-3 relative z-10">{casino.kycLevel} KYC</div>
-                             <p className="text-sm text-text-secondary max-w-xs relative z-10 font-rajdhani">
-                                {casino.kycLevel === 'NONE' ? 'No mandatory ID verification detected. Crypto-native privacy protocols active.' : 'Standard ID checks required for high-volume play/withdrawal.'}
-                             </p>
                          </div>
-                         <div className="p-8 bg-white/5 border border-white/10 rounded-xl">
-                             <h4 className="text-xs font-bold text-white uppercase font-orbitron mb-6 flex items-center gap-2">
-                                <Icons.Globe className="text-red-400 w-4 h-4" /> Geo-Fenced Zones
-                             </h4>
-                             <div className="flex flex-wrap gap-2">
-                                 {casino.restricted.map(r => (
-                                     <span key={r} className="px-3 py-1.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded text-[10px] font-bold uppercase font-jetbrains-mono flex items-center gap-2">
-                                         <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> {r}
-                                     </span>
-                                 ))}
-                             </div>
-                         </div>
-                    </div>
-                )}
+                    )}
 
-                 {/* Tab 3: VPR */}
-                {activeTab === 2 && (
-                    <div className="animate-fadeIn">
-                        <div className="bg-black border border-white/10 rounded-xl overflow-hidden font-jetbrains-mono text-xs shadow-2xl">
-                            <div className="p-4 border-b border-white/10 bg-[#0a0a0a] flex justify-between items-center">
-                                <span className="text-neon-surge flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-neon-surge rounded-full animate-pulse"></span>
-                                    root@zap-node:~/vpr_logs# tail -f {casino.id}
-                                </span>
-                                <Button size="sm" className="h-8 text-[10px] bg-neon-surge text-black hover:bg-white border-none font-bold" onClick={() => appContext?.openReviewModal()}>ADD INTEL</Button>
+                    {/* Tab 3: Terminal */}
+                    {activeTab === 2 && (
+                        <div className="bg-[#050505] rounded-3xl border border-[#333] overflow-hidden font-mono text-xs shadow-2xl animate-fade-up relative">
+                            {/* Scanline */}
+                            <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_0%,rgba(0,255,192,0.02)_50%,transparent_100%)] bg-[length:100%_4px] animate-[scanline_6s_linear_infinite] z-10"></div>
+                            
+                            <div className="bg-[#0e0e10] p-4 border-b border-[#333] flex items-center justify-between">
+                                <div className="flex gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500"></div>
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500"></div>
+                                    <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500"></div>
+                                </div>
+                                <span className="text-zinc-500 uppercase tracking-widest">root@zap-node:~/{casino.id}</span>
                             </div>
-                            <div className="p-6 space-y-3 text-text-secondary h-80 overflow-y-auto custom-scrollbar bg-black/50 backdrop-blur-sm">
-                                {[1,2,3,4,5,6].map(i => (
-                                    <div key={i} className="flex gap-4 border-b border-white/5 pb-3 last:border-0">
+                            <div className="p-8 space-y-4 text-zinc-400 h-96 overflow-y-auto custom-scrollbar bg-[#050505]">
+                                <div className="text-[#00FFC0]">>> ESTABLISHING SECURE LINK TO {casino.name.toUpperCase()} NODE...</div>
+                                <div className="text-zinc-500">>> HANDSHAKE COMPLETE. FETCHING VPR LOGS...</div>
+                                {[1,2,3,4,5].map(i => (
+                                    <div key={i} className="flex flex-col sm:flex-row gap-2 sm:gap-6 border-l border-[#333] pl-6 py-2">
                                         <span className="text-zinc-600 shrink-0">[{new Date().toLocaleTimeString()}]</span>
-                                        <span className={`font-bold shrink-0 ${i%2===0 ? 'text-neon-surge' : 'text-blue-400'}`}>{i%2===0 ? 'VERIFIED_PAYOUT' : 'GAME_AUDIT'}</span>
-                                        <span className="text-zinc-400 truncate">Transaction confirmed on {casino.chains[0]} network. Block #{Math.floor(Math.random() * 1000000)}</span>
+                                        <span className="text-blue-400 font-bold">TX_VERIFIED</span>
+                                        <span className="text-zinc-300 break-all font-bold">Hash: 0x{Math.random().toString(16).slice(2, 20)}...</span>
                                     </div>
                                 ))}
-                                <span className="animate-pulse text-neon-surge block mt-4">_</span>
+                                <div className="animate-pulse text-[#00FFC0] mt-6">_</div>
+                            </div>
+                             <div className="p-6 border-t border-[#333] bg-[#0a0a0a] flex justify-center">
+                                <button className="text-[#00FFC0] hover:text-white text-xs uppercase tracking-[0.2em] font-bold font-orbitron border border-[#00FFC0]/30 hover:bg-[#00FFC0]/10 px-8 py-4 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(0,255,192,0.2)]">
+                                    Submit New Intelligence
+                                </button>
+                             </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Right Column: Stats & CTA (4 Cols) */}
+                <div className="lg:col-span-4 space-y-8">
+                    {/* Hero CTA Card */}
+                    <div className="relative rounded-[2rem] overflow-hidden border border-[#00FFC0]/30 bg-[#00FFC0]/5 p-10 text-center group shadow-[0_0_50px_rgba(0,255,192,0.05)]">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#00FFC0]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <p className="text-xs font-bold text-[#00FFC0] uppercase tracking-[0.25em] mb-6">Active Bounty</p>
+                        <h3 className="text-5xl font-black text-white italic mb-10 font-orbitron tracking-tighter leading-none">{casino.bonus}</h3>
+                        
+                        <a 
+                            href={`${casino.website}?ref=zapway`} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="block w-full py-5 bg-[#00FFC0] text-black font-black uppercase tracking-[0.15em] text-sm rounded-xl hover:bg-white hover:scale-[1.02] transition-all shadow-[0_0_40px_rgba(0,255,192,0.3)] font-orbitron"
+                        >
+                            Claim Bonus
+                        </a>
+                        <p className="text-[10px] text-zinc-500 mt-6 font-mono">Terms & Conditions Apply. 18+</p>
+                    </div>
+
+                    {/* Info Blocks - Bento Style */}
+                    <div className="space-y-4">
+                         {/* Speed Metric */}
+                        <div className="bg-[#08080a] rounded-[1.5rem] border border-white/5 p-8 hover:border-white/10 transition-colors">
+                            <div className="flex justify-between items-end mb-4">
+                                <span className="text-xs text-zinc-500 uppercase tracking-[0.2em] font-orbitron">Withdrawal Speed</span>
+                                <Timer className="w-5 h-5 text-[#00FFC0]" />
+                            </div>
+                            <div className="text-2xl font-bold text-white font-rajdhani">{casino.withdrawalSpeed}</div>
+                            <div className="h-1.5 w-full bg-[#222] rounded-full mt-6 overflow-hidden">
+                                <div className="h-full bg-[#00FFC0] w-[95%] shadow-[0_0_15px_#00FFC0]"></div>
+                            </div>
+                        </div>
+
+                         {/* Foundation Metric */}
+                        <div className="grid grid-cols-2 gap-4">
+                             <div className="bg-[#08080a] rounded-[1.5rem] border border-white/5 p-6 hover:border-white/10 transition-colors">
+                                <span className="text-[10px] text-zinc-500 uppercase block mb-2 font-orbitron tracking-wider">Established</span>
+                                <span className="text-xl font-bold text-white font-rajdhani">{casino.established}</span>
+                            </div>
+                             <div className="bg-[#08080a] rounded-[1.5rem] border border-white/5 p-6 hover:border-white/10 transition-colors">
+                                <span className="text-[10px] text-zinc-500 uppercase block mb-2 font-orbitron tracking-wider">Trust Score</span>
+                                <span className="text-xl font-bold text-[#00FFC0] font-rajdhani">{casino.rating.toFixed(1)}</span>
+                            </div>
+                        </div>
+
+                        {/* Networks */}
+                         <div className="bg-[#08080a] rounded-[1.5rem] border border-white/5 p-8 hover:border-white/10 transition-colors">
+                            <span className="text-xs text-zinc-500 uppercase block mb-6 font-orbitron tracking-[0.2em]">Supported Networks</span>
+                            <div className="flex flex-wrap gap-2">
+                                {casino.chains.map(c => (
+                                    <span key={c} className="px-3 py-1.5 bg-[#121214] text-zinc-300 text-[10px] font-bold rounded-lg border border-white/5 hover:border-[#00FFC0]/50 hover:text-white transition-colors">
+                                        {c}
+                                    </span>
+                                ))}
                             </div>
                         </div>
                     </div>
-                )}
-
+                </div>
             </div>
 
-            {/* Mobile Sticky Footer - Improved Visibility */}
-             <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/90 backdrop-blur-xl border-t border-white/10 z-50 md:hidden flex gap-3 animate-slide-up shadow-[0_-10px_40px_rgba(0,0,0,0.9)] pb-[calc(1rem+env(safe-area-inset-bottom))]">
-                 <div className="flex-1 min-w-0">
-                     <p className="text-[9px] text-text-tertiary uppercase font-jetbrains-mono tracking-wider">Active Bonus</p>
-                     <p className="text-sm font-bold text-white truncate font-orbitron">{casino.bonus}</p>
-                 </div>
-                 <a href={`${casino.website}?ref=zapway`} target="_blank" rel="noopener noreferrer" className="px-8 py-3 bg-neon-surge text-black font-bold font-orbitron uppercase text-xs rounded shadow-[0_0_15px_rgba(0,255,192,0.3)] flex items-center shrink-0 hover:bg-white transition-colors">
-                     PLAY NOW
-                 </a>
-             </div>
-
+            {/* Mobile Sticky Footer Action Dock */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#09090b]/80 backdrop-blur-xl border-t border-white/10 z-50 lg:hidden pb-[calc(1rem+env(safe-area-inset-bottom))]">
+                <div className="flex gap-3 items-center max-w-md mx-auto">
+                    <div className="flex-1 p-2">
+                        <p className="text-[10px] text-zinc-500 uppercase font-orbitron tracking-wider">Active Bonus</p>
+                        <p className="text-sm font-bold text-white truncate font-rajdhani">{casino.bonus}</p>
+                    </div>
+                    <a 
+                        href={`${casino.website}?ref=zapway`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="px-8 py-4 bg-[#00FFC0] text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-white transition-colors shadow-[0_0_20px_rgba(0,255,192,0.3)] font-orbitron"
+                    >
+                        Play Now
+                    </a>
+                </div>
+            </div>
         </div>
     );
 };
@@ -820,12 +965,13 @@ const CasinoDirectoryPage: React.FC = () => {
     const [selectedCasinoId, setSelectedCasinoId] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeCategory, setActiveCategory] = useState('ALL');
-    
+
     const filteredCasinos = useMemo(() => {
         return CASINOS.filter(c => {
             if (!c.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
             if (activeCategory === 'VERIFIED' && c.status !== 'VERIFIED') return false;
             if (activeCategory === 'NO_KYC' && c.kycLevel !== 'NONE') return false;
+            if (activeCategory === 'CRYPTO' && c.chains.length === 0) return false;
             return true;
         });
     }, [searchTerm, activeCategory]);
@@ -836,91 +982,103 @@ const CasinoDirectoryPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-black animate-fadeIn pb-12 relative font-rajdhani">
-             {/* Background Texture */}
-             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black z-0"></div>
-             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] z-0"></div>
+        <div className="min-h-screen bg-[#050505] text-white font-sans pb-20 relative selection:bg-[#00FFC0] selection:text-black animate-fadeIn">
+            
+            {/* Deep Cybernetic Background */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#0a0a0c_0%,_#000000_100%)]"></div>
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-[#00FFC0]/5 blur-[120px] rounded-full opacity-30"></div>
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] opacity-20"></div>
+            </div>
 
-            {/* Hero Header */}
-            <div className="relative pt-16 pb-10 px-4 md:px-8 z-10">
-                 <div className="max-w-[1600px] mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-                        <div>
-                             <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 border border-neon-surge/30 rounded-full bg-neon-surge/5 text-[10px] font-jetbrains-mono text-neon-surge uppercase tracking-widest backdrop-blur-sm">
-                                <span className="w-1.5 h-1.5 bg-neon-surge rounded-full animate-pulse"></span>
-                                Live Network Status
+            {/* Main Floating Container */}
+            <div className="relative z-10 pt-8 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-[1900px] mx-auto bg-[#050505]/50 rounded-2xl md:rounded-[3rem] border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden min-h-[calc(100vh-4rem)] relative backdrop-blur-sm">
+                    
+                    {/* Inner Top Glow */}
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#00FFC0]/50 to-transparent"></div>
+
+                    {/* Hero Section */}
+                    <div className="relative pt-16 pb-12 px-6 lg:px-12">
+                        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+                            <div>
+                                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-[#00FFC0]/20 bg-[#00FFC0]/5 text-[#00FFC0] text-[10px] font-bold uppercase tracking-[0.25em] mb-8 backdrop-blur-md animate-fade-up shadow-[0_0_20px_rgba(0,255,192,0.1)]">
+                                    <Zap className="w-3 h-3" /> Live Grid Status // Online
+                                </div>
+                                <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none animate-fade-up font-orbitron" style={{ animationDelay: '0.1s' }}>
+                                    Operator <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFC0] via-white to-[#00FFC0] animate-pulse-glow">Grid</span>
+                                </h1>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-black text-white font-orbitron uppercase tracking-tighter leading-none drop-shadow-2xl">
-                                Operator <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-surge to-white">Grid</span>
-                            </h1>
+                            
+                            {/* Stats Ticker */}
+                            <div className="flex gap-4 overflow-x-auto no-scrollbar w-full md:w-auto animate-fade-up pb-2" style={{ animationDelay: '0.2s' }}>
+                                {[
+                                    { label: 'Active Nodes', value: CASINOS.length, color: 'text-white' },
+                                    { label: 'Compliance', value: '98.2%', color: 'text-[#00FFC0]' },
+                                    { label: '24h Volume', value: '$42.5M', color: 'text-blue-400' }
+                                ].map((stat, i) => (
+                                    <div key={i} className="bg-[#0e0e10] border border-white/5 p-5 rounded-2xl backdrop-blur-md min-w-[160px] hover:border-[#00FFC0]/30 transition-colors group">
+                                        <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-2 font-orbitron group-hover:text-[#00FFC0] transition-colors">{stat.label}</p>
+                                        <p className={`text-3xl font-black font-rajdhani ${stat.color}`}>{stat.value}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Command Bar - Floating Glass Strip (Sticky) */}
+                        <div className="sticky top-16 z-40 animate-fade-up transition-all duration-300" style={{ animationDelay: '0.3s' }}>
+                            <div className="max-w-[1800px] mx-auto bg-[#0e0e10]/80 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-3 items-center relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                                
+                                <div className="relative flex-1 w-full group">
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-[#00FFC0] transition-colors" />
+                                    <input 
+                                        type="text" 
+                                        placeholder="SEARCH FREQUENCY..." 
+                                        className="w-full h-14 pl-12 bg-[#050505] border border-white/5 rounded-xl text-white text-xs font-bold uppercase tracking-wider outline-none placeholder:text-zinc-700 focus:border-[#00FFC0]/40 focus:bg-[#0a0a0a] transition-all font-orbitron"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                                <div className="h-8 w-px bg-white/10 hidden md:block mx-2"></div>
+                                <div className="flex gap-2 w-full md:w-auto overflow-x-auto no-scrollbar pb-1 md:pb-0 p-1">
+                                    {['ALL', 'VERIFIED', 'NO_KYC', 'CRYPTO'].map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setActiveCategory(cat)}
+                                            className={`px-6 py-4 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border font-orbitron ${activeCategory === cat ? 'bg-[#00FFC0] text-black border-[#00FFC0] shadow-[0_0_20px_rgba(0,255,192,0.3)]' : 'bg-[#050505] text-zinc-500 border-white/5 hover:border-white/20 hover:text-white'}`}
+                                        >
+                                            {cat.replace('_', ' ')}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Grid */}
+                    <div className="px-4 lg:px-12 pb-24 relative z-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                            {filteredCasinos.map((casino, i) => (
+                                <CasinoCard 
+                                    key={casino.id} 
+                                    casino={casino} 
+                                    index={i} 
+                                    onSelect={(c) => setSelectedCasinoId(c.id)} 
+                                />
+                            ))}
                         </div>
                         
-                        {/* Network Stats Monitor */}
-                        <div className="flex gap-6 overflow-x-auto no-scrollbar w-full md:w-auto pb-2 md:pb-0">
-                             <div className="bg-white/5 border border-white/5 p-3 rounded-lg backdrop-blur-md min-w-[100px] shrink-0">
-                                 <p className="text-[9px] text-text-tertiary uppercase font-jetbrains-mono mb-1">Indexed Nodes</p>
-                                 <p className="text-2xl font-bold text-white font-orbitron">{CASINOS.length}</p>
-                             </div>
-                             <div className="bg-white/5 border border-white/5 p-3 rounded-lg backdrop-blur-md min-w-[100px] shrink-0">
-                                 <p className="text-[9px] text-text-tertiary uppercase font-jetbrains-mono mb-1">Verified</p>
-                                 <p className="text-2xl font-bold text-neon-surge font-orbitron">85%</p>
-                             </div>
-                             <div className="bg-white/5 border border-white/5 p-3 rounded-lg backdrop-blur-md min-w-[100px] shrink-0">
-                                 <p className="text-[9px] text-text-tertiary uppercase font-jetbrains-mono mb-1">24h Volume</p>
-                                 <p className="text-2xl font-bold text-blue-500 font-orbitron">$42M</p>
-                             </div>
-                        </div>
+                        {filteredCasinos.length === 0 && (
+                            <div className="py-32 text-center border border-dashed border-white/10 rounded-[3rem] bg-[#0a0a0a]/50 mt-12 backdrop-blur-sm">
+                                <Activity className="w-16 h-16 text-zinc-800 mx-auto mb-6" />
+                                <h3 className="text-2xl font-black text-zinc-600 uppercase tracking-widest font-orbitron">No Signal Found</h3>
+                            </div>
+                        )}
                     </div>
-                 </div>
-            </div>
 
-            {/* Edge-to-Edge Command Bar */}
-            <div className="sticky top-[64px] z-30 bg-black/90 backdrop-blur-xl border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 w-[calc(100%_+_2rem)] sm:w-[calc(100%_+_3rem)] lg:w-[calc(100%_+_4rem)] transition-all duration-200">
-                <div className="max-w-[1600px] mx-auto py-3 flex gap-4 md:gap-6 items-center overflow-x-auto no-scrollbar">
-                    <div className="relative shrink-0 w-56 md:w-72">
-                        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-neon-surge transition-colors" />
-                        <input 
-                            placeholder="SEARCH FREQUENCY..." 
-                            className="w-full bg-white/5 border border-white/10 rounded-full h-12 pl-11 text-xs text-white focus:border-neon-surge focus:bg-white/10 outline-none font-jetbrains-mono transition-all placeholder:text-zinc-600"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <div className="h-8 w-px bg-white/10 shrink-0"></div>
-                    <div className="flex gap-2">
-                        {['ALL', 'VERIFIED', 'NO_KYC', 'CRYPTO'].map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => setActiveCategory(cat)}
-                                className={`px-6 py-3 rounded-full text-[10px] font-bold font-orbitron uppercase tracking-wider transition-all whitespace-nowrap border ${activeCategory === cat ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'bg-transparent text-zinc-500 border-white/10 hover:border-white/30 hover:text-white'}`}
-                            >
-                                {cat.replace('_', ' ')}
-                            </button>
-                        ))}
-                    </div>
                 </div>
             </div>
-
-            {/* Grid Layout */}
-            <div className="max-w-[1600px] mx-auto px-4 pt-8 relative z-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                    {filteredCasinos.map((casino, i) => (
-                        <CasinoCard 
-                            key={casino.id} 
-                            casino={casino} 
-                            index={i} 
-                            onSelect={(c) => setSelectedCasinoId(c.id)} 
-                        />
-                    ))}
-                </div>
-                 {filteredCasinos.length === 0 && (
-                    <div className="text-center py-32 border border-dashed border-white/10 rounded-xl bg-white/5">
-                        <Icons.Search className="h-12 w-12 text-zinc-700 mx-auto mb-4" />
-                        <p className="text-zinc-500 font-orbitron uppercase text-sm tracking-widest">No Signals Detected</p>
-                    </div>
-                )}
-            </div>
-
         </div>
     );
 };
