@@ -118,7 +118,7 @@ const SupportPage: React.FC = () => {
                             <button key={i} className="p-3 bg-foundation-light border border-[#333] rounded-xl text-left hover:border-neon-surge transition-all group active:scale-[0.98]">
                                 <item.icon className="h-5 w-5 text-text-tertiary group-hover:text-neon-surge mb-2" />
                                 <div className="font-orbitron font-bold text-xs text-white uppercase mb-1">{item.title}</div>
-                                <div className="font-jetbrains-mono text-[10px] text-neon-surge uppercase group-hover:underline">> {item.action}</div>
+                                <div className="font-jetbrains-mono text-[10px] text-neon-surge uppercase group-hover:underline">{'>'} {item.action}</div>
                             </button>
                         ))}
                     </div>
@@ -239,7 +239,7 @@ const SupportPage: React.FC = () => {
                                     >
                                         <option value="STANDARD">STANDARD (48-72h)</option>
                                         <option value="ELEVATED">ELEVATED (24h)</option>
-                                        <option value="CRITICAL" className="text-warning-high font-bold">CRITICAL (&lt; 4 HOURS (EVIDENCE REQ.))</option>
+                                        <option value="CRITICAL" className="text-warning-high font-bold">CRITICAL ({'<'} 4 HOURS (EVIDENCE REQ.))</option>
                                     </Input>
                                 </div>
                                 <div>
@@ -331,7 +331,7 @@ const SupportPage: React.FC = () => {
                             </div>
                              <div className="text-center">
                                 <span className="text-warning-high font-orbitron font-bold uppercase text-xs block mb-1">CRITICAL ORBIT</span>
-                                <span className="text-white font-jetbrains-mono font-bold">&lt; 4 HOURS (EVIDENCE REQ.)</span>
+                                <span className="text-white font-jetbrains-mono font-bold">{'<'} 4 HOURS (EVIDENCE REQ.)</span>
                             </div>
                         </div>
 

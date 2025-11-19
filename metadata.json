@@ -1,8 +1,5 @@
 {
-  "name": "Zapway",
-  "short_name": "Zapway",
-  "description": "The Tier-1 crypto casino directory. Verified operator nodes, real-time intel, and exclusive rewards. Gamble Smarter, Not Harder.",
-  "requestFramePermissions": [
-    "clipboard-write"
-  ]
+  "name": "Zapway Corp. Gamble Smarter, Not Harder",
+  "description": "Zapway",
+  "requestFramePermissions": []
 }

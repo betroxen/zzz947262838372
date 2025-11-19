@@ -863,8 +863,8 @@ const CasinoDetail: React.FC<{ casino: Casino; onBack: () => void }> = ({ casino
                                 <span className="text-zinc-500 uppercase tracking-widest">root@zap-node:~/{casino.id}</span>
                             </div>
                             <div className="p-8 space-y-4 text-zinc-400 h-96 overflow-y-auto custom-scrollbar bg-[#050505]">
-                                <div className="text-[#00FFC0]">>> ESTABLISHING SECURE LINK TO {casino.name.toUpperCase()} NODE...</div>
-                                <div className="text-zinc-500">>> HANDSHAKE COMPLETE. FETCHING VPR LOGS...</div>
+                                <div className="text-[#00FFC0]">{'>>'} ESTABLISHING SECURE LINK TO {casino.name.toUpperCase()} NODE...</div>
+                                <div className="text-zinc-500">{'>>'} HANDSHAKE COMPLETE. FETCHING VPR LOGS...</div>
                                 {[1,2,3,4,5].map(i => (
                                     <div key={i} className="flex flex-col sm:flex-row gap-2 sm:gap-6 border-l border-[#333] pl-6 py-2">
                                         <span className="text-zinc-600 shrink-0">[{new Date().toLocaleTimeString()}]</span>
